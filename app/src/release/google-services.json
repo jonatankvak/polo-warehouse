@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "479076920916",
+    "project_id": "polo-bbc2a",
+    "storage_bucket": "polo-bbc2a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:479076920916:android:f0442cbc20ea302d3587c1",
+        "android_client_info": {
+          "package_name": "com.polo.warehouse"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "479076920916-8icebde3ol5erq9kecbejg0qpa9cr4nv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.polo.warehouse",
+            "certificate_hash": "2498871f33e503ec32d8551403d5bce836991ca8"
+          }
+        },
+        {
+          "client_id": "479076920916-jhgd5mjugdp8mn1ksdldtjv0339rvkod.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAVrToLlunirVTtq8cA1zYL2KwnRGNepAA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "479076920916-jhgd5mjugdp8mn1ksdldtjv0339rvkod.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

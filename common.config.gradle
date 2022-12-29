@@ -1,18 +1,15 @@
-plugins {
-    id 'com.android.application'
-    id 'org.jetbrains.kotlin.android'
-    id 'com.google.gms.google-services'
-}
-
-apply from: rootDir.path + "/common.config.gradle"
-apply from: rootDir.path + "/common.dependencies.gradle"
+apply plugin: "kotlin-android"
+apply plugin: "kotlin-kapt"
+apply plugin: "kotlin-parcelize"
+apply plugin: "dagger.hilt.android.plugin"
+apply plugin: "androidx.navigation.safeargs.kotlin"
+apply plugin: "org.jlleitschuh.gradle.ktlint"
 
 android {
     namespace 'com.polo.warehouse'
     compileSdk compile_sdk
 
     defaultConfig {
-        applicationId "com.polo.warehouse"
         minSdk min_sdk
         targetSdk target_sdk
         versionCode 1
@@ -26,14 +23,12 @@ android {
 
     buildTypes {
         debug {
-            applicationIdSuffix(".debug")
             debuggable = true
             resValue("string", "app_name", "W-Debug")
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
 
         staging {
-            applicationIdSuffix(".alpha")
             resValue("string", "app_name", "W-Alpha")
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
@@ -68,9 +63,4 @@ android {
             excludes += '/META-INF/{AL2.0,LGPL2.1}'
         }
     }
-}
-
-dependencies {
-
-    implementation(platform("com.google.firebase:firebase-bom:31.1.1"))
 }
