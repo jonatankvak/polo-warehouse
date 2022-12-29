@@ -1,0 +1,44 @@
+dependencies {
+
+    implementation("androidx.core:core-ktx:$androidxCore")
+
+    // Lifecycle
+
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleRuntimeKtx")
+
+    // Activity
+
+    implementation("androidx.activity:activity-compose:$activityKtx")
+
+    // Fragment
+
+    implementation("androidx.fragment:fragment-ktx:$fragmentKtx")
+
+    // Material
+
+    implementation("androidx.compose.material3:material3:$material")
+
+    // Hilt
+
+    implementation("com.google.dagger:hilt-android:$hiltAndroid")
+    kapt("com.google.dagger:hilt-android-compiler:$hiltAndroid")
+
+    // Navigation
+
+    implementation("androidx.navigation:navigation-fragment-ktx:$navigation")
+
+    // Compose
+
+    implementation("androidx.compose.ui:ui:$compose")
+    implementation("androidx.compose.ui:ui-tooling-preview:$compose")
+    debugImplementation("androidx.compose.ui:ui-tooling:$compose")
+    debugImplementation("androidx.compose.ui:ui-test-manifest:$compose")
+    androidTestImplementation("androidx.compose.ui:ui-test-junit4:$compose")
+
+    // Testing
+
+    testImplementation("junit:junit:$junit")
+    androidTestImplementation("androidx.test.ext:junit:$androidXJunit")
+    androidTestImplementation("androidx.test.espresso:espresso-core:$espreso")
+    androidTestImplementation("androidx.compose.ui:ui-test-junit4:$compose")
+}

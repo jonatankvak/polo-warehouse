@@ -14,3 +14,6 @@ dependencyResolutionManagement {
 }
 rootProject.name = "Polo Warehouse"
 include ':app'
+include ':libraries:core'
+include ':libraries:core-data'
+include ':feature:authentication'
