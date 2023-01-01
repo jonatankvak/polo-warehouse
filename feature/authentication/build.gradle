@@ -5,3 +5,16 @@ plugins {
 
 apply from: rootDir.path + "/common.config.gradle"
 apply from: rootDir.path + "/common.dependencies.gradle"
+
+android {
+    namespace 'com.polo.authentication'
+}
+
+dependencies {
+
+    implementation(platform("com.google.firebase:firebase-bom:$firebaseBom"))
+    implementation("com.google.firebase:firebase-auth")
+
+    implementation(project(":libraries:core"))
+    implementation(project(":libraries:core-data"))
+}

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@id/authentication_flow"
+    app:startDestination="@id/enterPhoneNumberFragment">
+
+    <fragment
+        android:id="@+id/enterPhoneNumberFragment"
+        android:name="com.polo.authentication.view.VerificationFragment"
+        android:label="EnterPhoneNumberFragment">
+
+        <action
+            android:id="@+id/navigateToDashboard"
+            app:destination="@id/dashboard_flow"/>
+    </fragment>
+</navigation>

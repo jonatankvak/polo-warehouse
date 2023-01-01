@@ -5,3 +5,7 @@ plugins {
 
 apply from: rootDir.path + "/common.config.gradle"
 apply from: rootDir.path + "/common.dependencies.gradle"
+
+android {
+    namespace 'com.polo.core'
+}

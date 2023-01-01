@@ -1,0 +1,16 @@
+plugins {
+    id 'com.android.library'
+    id 'org.jetbrains.kotlin.android'
+}
+
+apply from: rootDir.path + "/common.config.gradle"
+apply from: rootDir.path + "/common.dependencies.gradle"
+
+android {
+    namespace 'com.polo.dashboard'
+}
+
+dependencies {
+    implementation(project(":libraries:core"))
+    implementation(project(":libraries:core-data"))
+}
