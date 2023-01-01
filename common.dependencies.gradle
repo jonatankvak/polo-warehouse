@@ -2,6 +2,11 @@ dependencies {
 
     implementation("androidx.core:core-ktx:$androidxCore")
 
+    // Kotlin
+
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlin")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:$kotlin")
+
     // Lifecycle
 
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleRuntimeKtx")

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="verify_btn">Verify</string>
+    <string name="confirm_btn">Confirm</string>
+    <string name="resend_token_btn">Resend</string>
+    <string name="enter_phone_number">Enter phone number</string>
+    <string name="enter_name">Enter your name</string>
+    <string name="first_name">First name</string>
+    <string name="last_name">Last name</string>
+    <string name="country_prefix" translatable="false">+381</string>
+    <string name="enter_token">Enter token</string>
+</resources>
