@@ -6,7 +6,9 @@ interface IAuthenticationDataSource {
 
     fun isSignedIn(): Boolean
 
+    fun getUid(): String
+
     suspend fun updateName(name: String): Either<Exception, Unit>
 
-    fun getName(): Either<Exception, String>
+    fun getName(): String
 }

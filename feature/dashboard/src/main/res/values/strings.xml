@@ -1,4 +1,11 @@
 <resources>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="dashboard_screen_title">Dashboard</string>
+    <string name="dashboard_screen_subtitle">Welcome %s</string>
+    <string name="dashboard_screen_pallet_section">Ready pallets</string>
+    <string name="dashboard_screen_pallet_name">Name</string>
+    <string name="dashboard_screen_pallet_amount">Amount</string>
+    <string name="dashboard_screen_pallet_count">Count</string>
+    <string name="nav_create">Create</string>
+    <string name="nav_scan">Scan</string>
+    <string name="nav_transport">Transport</string>
 </resources>

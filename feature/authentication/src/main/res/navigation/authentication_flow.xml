@@ -11,6 +11,11 @@
 
         <action
             android:id="@+id/navigateToDashboard"
-            app:destination="@id/dashboard_flow"/>
+            app:destination="@id/dashboard_flow"
+            app:enterAnim="@transition/slide_in_up"
+            app:exitAnim="@transition/slide_out_up"
+            app:popEnterAnim="@transition/slide_in_down"
+            app:popExitAnim="@transition/slide_out_down"
+            app:popUpTo="@id/main_flow"/>
     </fragment>
 </navigation>

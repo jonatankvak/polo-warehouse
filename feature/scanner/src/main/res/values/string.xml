@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="scan_error_message">Wrong pallet QR code!</string>
+    <string name="scan_error_generic_message">Something went wrong!</string>
+    <string name="scan_verify_pallet">Verify pallet</string>
+</resources>

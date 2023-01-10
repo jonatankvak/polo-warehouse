@@ -57,8 +57,7 @@ import com.polo.authentication.R
 import com.polo.authentication.viewmodel.VerificationViewModel
 import com.polo.authentication.viewmodel.VerificationViewModel.UiState
 import com.polo.core.theme.AppTheme
-import com.polo.core.theme.sunglow
-import com.polo.core.ui.OtpTextField
+import com.polo.core_ui.OtpTextField
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -133,7 +132,7 @@ class VerificationFragment: Fragment() {
                 Image(
                     modifier = Modifier
                         .background(
-                            color = sunglow,
+                            color = Color(0xFFFFC72C),
                             shape = CircleShape
                         )
                         .size(160.dp)
@@ -262,7 +261,7 @@ class VerificationFragment: Fragment() {
                         text = newText
                     },
                     shape = Shapes().extraLarge,
-                    colors = TextFieldDefaults.textFieldColors(
+                    colors = TextFieldDefaults.colors(
                         focusedIndicatorColor = Color.Transparent,
                         disabledIndicatorColor = Color.Transparent,
                         unfocusedIndicatorColor = Color.Transparent,
@@ -342,7 +341,7 @@ class VerificationFragment: Fragment() {
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text, imeAction = ImeAction.Next),
                     onValueChange = { newText -> firstName = newText },
                     shape = Shapes().extraLarge,
-                    colors = TextFieldDefaults.textFieldColors(
+                    colors = TextFieldDefaults.colors(
                         focusedIndicatorColor = Color.Transparent,
                         disabledIndicatorColor = Color.Transparent,
                         unfocusedIndicatorColor = Color.Transparent,
@@ -365,7 +364,7 @@ class VerificationFragment: Fragment() {
                         lastName = newText
                     },
                     shape = Shapes().extraLarge,
-                    colors = TextFieldDefaults.textFieldColors(
+                    colors = TextFieldDefaults.colors(
                         focusedIndicatorColor = Color.Transparent,
                         disabledIndicatorColor = Color.Transparent,
                         unfocusedIndicatorColor = Color.Transparent,

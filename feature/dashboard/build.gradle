@@ -13,4 +13,7 @@ android {
 dependencies {
     implementation(project(":libraries:core"))
     implementation(project(":libraries:core-data"))
+    implementation(project(":libraries:core-ui"))
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.8.0'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.8.0'
 }

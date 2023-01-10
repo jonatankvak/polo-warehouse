@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="created_pallets_title">Created pallets</string>
+    <string name="create_pallet_title">Create pallet</string>
+    <string name="create_pallet_product">Product</string>
+    <string name="create_pallet_amount">Amount</string>
+    <string name="create_pallet_warehouse">Warehouse</string>
+    <string name="create_pallet_btn">Create</string>
+    <string name="scan_error_message">Wrong pallet QR code!</string>
+</resources>

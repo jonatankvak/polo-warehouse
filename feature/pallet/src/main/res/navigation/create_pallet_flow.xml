@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@id/create_pallet_flow"
+    app:startDestination="@id/createPalletFragment">
+
+    <fragment
+        android:id="@+id/createPalletFragment"
+        android:name="com.polo.pallet.create.view.CreatePalletFragment"
+        android:label="CreatePalletFragment" >
+
+        <action app:destination="@+id/verify_scanner_flow"
+            app:enterAnim="@transition/slide_in_up"
+            app:exitAnim="@transition/slide_out_up"
+            app:popEnterAnim="@transition/slide_in_down"
+            app:popExitAnim="@transition/slide_out_down"
+            android:id="@+id/navigateToVerifyScanner">
+            <argument
+                android:name="pallet"
+                app:argType="com.polo.data.model.ScanningPallet" />
+        </action>
+    </fragment>
+</navigation>

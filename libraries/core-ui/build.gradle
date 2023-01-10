@@ -1,0 +1,18 @@
+plugins {
+    id 'com.android.library'
+    id 'org.jetbrains.kotlin.android'
+}
+
+apply from: rootDir.path + "/common.config.gradle"
+apply from: rootDir.path + "/common.dependencies.gradle"
+
+android {
+    namespace 'com.polo.ui'
+}
+
+dependencies {
+    implementation(project(":libraries:core"))
+    implementation(project(":libraries:core-data"))
+    implementation "androidx.compose.material3:material3:1.3.0"
+    implementation "androidx.compose.material:material:1.7.1"
+}

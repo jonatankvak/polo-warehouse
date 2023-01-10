@@ -16,6 +16,11 @@ class AuthenticationDataSource @Inject constructor(
         return firebaseAuth.currentUser != null
     }
 
+    override fun getUid(): String {
+
+        return firebaseAuth.currentUser?.uid ?: throw Exception("User must be logged in")
+    }
+
     override suspend fun updateName(name: String): Either<Exception, Unit> {
 
         return runCatchingEither {
@@ -27,9 +32,7 @@ class AuthenticationDataSource @Inject constructor(
         }
     }
 
-    override fun getName(): Either<Exception, String> {
-        return firebaseAuth.currentUser?.displayName?.let {
-            Either.Result(it)
-        } ?: Either.Error(Exception("User doesn't have a name"))
+    override fun getName(): String {
+        return firebaseAuth.currentUser?.displayName.orEmpty()
     }
 }

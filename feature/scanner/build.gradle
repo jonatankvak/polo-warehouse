@@ -1,0 +1,30 @@
+plugins {
+    id 'com.android.library'
+    id 'org.jetbrains.kotlin.android'
+}
+
+apply from: rootDir.path + "/common.config.gradle"
+apply from: rootDir.path + "/common.dependencies.gradle"
+
+android {
+    namespace 'com.polo.scanner'
+}
+
+dependencies {
+
+    implementation(platform("com.google.firebase:firebase-bom:$firebaseBom"))
+    implementation("com.google.firebase:firebase-common-ktx")
+    implementation("com.google.firebase:firebase-firestore-ktx")
+
+    implementation("androidx.compose.material:material:$materialCompose")
+
+    implementation("androidx.camera:camera-camera2:$camera2")
+    implementation("androidx.camera:camera-lifecycle:$camera2")
+    implementation("androidx.camera:camera-view:$camera2")
+
+    implementation("com.google.zxing:core:$zxing")
+
+    implementation(project(":libraries:core"))
+    implementation(project(":libraries:core-data"))
+    implementation(project(":libraries:core-ui"))
+}

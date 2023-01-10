@@ -7,7 +7,24 @@
 
     <fragment
         android:id="@+id/dashboardFragment"
-        android:name="com.polo.dashboard.DashboardFragment"
+        android:name="com.polo.dashboard.view.DashboardFragment"
         android:label="fragment_dashboard"
-        tools:layout="@layout/fragment_dashboard" />
+        tools:layout="@layout/fragment_dashboard">
+
+        <action android:id="@+id/navigateToCreatePalletScreen"
+            app:enterAnim="@transition/slide_in_up"
+            app:exitAnim="@transition/slide_out_up"
+            app:popEnterAnim="@transition/slide_in_down"
+            app:popExitAnim="@transition/slide_out_down"
+            app:destination="@id/create_pallet_flow"
+            app:popUpTo="@navigation/dashboard_flow"/>
+
+        <action android:id="@+id/navigateToEditPalletScreen"
+            app:enterAnim="@transition/slide_in_up"
+            app:exitAnim="@transition/slide_out_up"
+            app:popEnterAnim="@transition/slide_in_down"
+            app:popExitAnim="@transition/slide_out_down"
+            app:destination="@id/edit_pallet_scanner_flow"
+            app:popUpTo="@navigation/dashboard_flow"/>
+    </fragment>
 </navigation>
