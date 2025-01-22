@@ -2,6 +2,7 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
     id 'com.google.gms.google-services'
+    id 'com.google.firebase.crashlytics'
 }
 
 apply from: rootDir.path + "/common.config.gradle"
@@ -73,6 +74,8 @@ android {
 dependencies {
 
     implementation(platform("com.google.firebase:firebase-bom:$firebaseBom"))
+    implementation("com.google.firebase:firebase-crashlytics")
+    implementation("com.google.firebase:firebase-analytics")
 
     implementation("androidx.appcompat:appcompat:$appcompat")
 
@@ -80,4 +83,6 @@ dependencies {
     implementation(project(":libraries:core-data"))
     implementation(project(":feature:authentication"))
     implementation(project(":feature:dashboard"))
+    implementation(project(":feature:pallet"))
+    implementation(project(":feature:scanner"))
 }

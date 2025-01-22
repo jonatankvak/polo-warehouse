@@ -6,5 +6,9 @@
 
     <include app:graph="@navigation/authentication_flow"/>
     <include app:graph="@navigation/dashboard_flow"/>
+    <include app:graph="@navigation/create_pallet_flow"/>
+    <include app:graph="@navigation/verify_scanner_flow"/>
+    <include app:graph="@navigation/edit_pallet_scanner_flow"/>
+    <include app:graph="@navigation/read_pallet_flow"/>
 
 </navigation>

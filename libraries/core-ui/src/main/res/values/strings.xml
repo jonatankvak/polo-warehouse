@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="pallet_id">ID</string>
+    <string name="pallet_status">Status</string>
+    <string name="pallet_name">Name</string>
+    <string name="pallet_amount">Amount</string>
+    <string name="pallet_date">Date</string>
+    <string name="pallet_warehouse">Warehouse</string>
+    <string name="pallet_res_person">Responsible person</string>
+</resources>

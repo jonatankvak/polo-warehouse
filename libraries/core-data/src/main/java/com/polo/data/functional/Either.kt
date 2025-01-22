@@ -13,8 +13,14 @@ sealed class Either <out E, out R> {
 
     fun result(): R = (this as Result<R>).data
 
-    fun onError(action: (E) -> Unit) {
+    fun onError(action: (E) -> Unit): Either<E, R> {
         if (this is Error) action(this.data)
+        return this
+    }
+
+    fun onResult(action: (R) -> Unit): Either<E, R> {
+        if (this is Result) action(this.data)
+        return this
     }
 
     fun either(fnl: (E) -> Any, fnR: (R) -> Any): Any =

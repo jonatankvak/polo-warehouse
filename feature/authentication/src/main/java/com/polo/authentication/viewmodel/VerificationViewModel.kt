@@ -115,25 +115,25 @@ class VerificationViewModel @Inject constructor(
         val nameResult = authenticationDataSource.getName()
 
         _state.update {
-            _state.value.copy(isUserSignedIn = true, isLoading = false, isNameProvided = nameResult.isResult)
+            _state.value.copy(isUserSignedIn = true, isLoading = false, isNameProvided = nameResult.isNotBlank())
         }
     }
 
-    private fun handleSignInError(exception: Exception) {
+    private suspend fun handleSignInError(exception: Exception) {
 
         _state.update {
             _state.value.copy(isLoading = false, isError = true, errorMessage = exception.message ?: "")
         }
     }
 
-    private fun handleNameSuccess() {
+    private suspend fun handleNameSuccess() {
 
         _state.update {
             _state.value.copy(isNameProvided = true, isLoading = false)
         }
     }
 
-    private fun handleNameError(exception: Exception) {
+    private suspend fun handleNameError(exception: Exception) {
 
         _state.update {
             _state.value.copy(isLoading = false, isError = true, errorMessage = exception.message ?: "")
