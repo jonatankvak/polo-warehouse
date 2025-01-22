@@ -3,12 +3,11 @@ package com.polo.warehouse.activity
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.FragmentContainerView
 import androidx.navigation.fragment.NavHostFragment
 import com.polo.warehouse.R
-import com.polo.core.R as coreR
 import com.polo.warehouse.R.layout
 import dagger.hilt.android.AndroidEntryPoint
+import com.polo.core.R as coreR
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {

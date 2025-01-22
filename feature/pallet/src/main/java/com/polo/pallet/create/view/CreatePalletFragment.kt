@@ -18,7 +18,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.polo.core.theme.AppTheme
-import com.polo.data.model.Pallet
 import com.polo.data.model.ScanningPallet
 import com.polo.pallet.create.viewmodel.CreatePalletViewModel
 import dagger.hilt.android.AndroidEntryPoint

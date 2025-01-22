@@ -2,7 +2,6 @@ package com.polo.data.datasource
 
 import android.app.Activity
 import android.content.Context
-import android.provider.ContactsContract.CommonDataKinds.Phone
 import com.google.firebase.FirebaseException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.PhoneAuthCredential

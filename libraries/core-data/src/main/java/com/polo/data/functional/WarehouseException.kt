@@ -1,7 +1,5 @@
 package com.polo.data.functional
 
-import java.lang.Exception
-
 sealed class WarehouseException : Exception() {
 
     data class Error(

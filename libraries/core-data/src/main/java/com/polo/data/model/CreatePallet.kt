@@ -2,10 +2,8 @@ package com.polo.data.model
 
 import com.google.firebase.firestore.ServerTimestamp
 import com.polo.data.model.CreatePallet.PalletStatus.CREATED
-import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
-import java.time.ZoneOffset
 import java.util.Date
 
 data class CreatePallet(

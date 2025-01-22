@@ -1,7 +1,6 @@
 package com.polo.dashboard.view
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -45,17 +44,17 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.polo.core.R.drawable
 import com.polo.core.theme.AppTheme
 import com.polo.core_ui.ExpandableContent
+import com.polo.dashboard.R
+import com.polo.dashboard.viewmodel.DashboardViewModel
 import com.polo.dashboard.viewmodel.DashboardViewModel.UiState
 import com.polo.dashboard.viewmodel.PalletListUiModel.PalletListUiBody
 import com.polo.dashboard.viewmodel.PalletListUiModel.PalletListUiHeader
-import com.polo.dashboard.R
-import com.polo.dashboard.viewmodel.DashboardViewModel
-import com.polo.ui.R.string
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

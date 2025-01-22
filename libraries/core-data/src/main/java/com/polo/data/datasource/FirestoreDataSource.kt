@@ -8,8 +8,8 @@ import com.polo.data.functional.Either
 import com.polo.data.functional.runCatchingEither
 import com.polo.data.model.CreatePallet
 import com.polo.data.model.CreatePallet.PalletStatus
-import com.polo.data.model.ProductDocument
 import com.polo.data.model.PalletDocument
+import com.polo.data.model.ProductDocument
 import com.polo.data.model.WarehouseDocument
 import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers

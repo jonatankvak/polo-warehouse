@@ -7,7 +7,6 @@ import com.polo.data.datasource.IFireStoreDataSource
 import com.polo.data.model.CreatePallet.PalletStatus.CREATED
 import com.polo.data.model.CreatePallet.PalletStatus.READY
 import com.polo.data.model.CreatePallet.PalletStatus.TRANSPORT
-import com.polo.data.model.Warehouse.PRISLONICA
 import com.polo.data.model.Warehouse.ZABLACE
 import dagger.hilt.android.lifecycle.HiltViewModel
 import de.palm.composestateevents.StateEvent
