@@ -1,10 +1,10 @@
 package com.polo.data
 
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.ktx.auth
+import com.google.firebase.auth.auth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
+import com.google.firebase.firestore.firestore
+import com.google.firebase.Firebase
 import com.polo.data.datasource.AuthenticationDataSource
 import com.polo.data.datasource.FirestoreDataSource
 import com.polo.data.datasource.IAuthenticationDataSource

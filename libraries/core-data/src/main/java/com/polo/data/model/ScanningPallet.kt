@@ -4,7 +4,9 @@ import android.os.Parcelable
 import com.polo.data.model.CreatePallet.PalletStatus
 import com.polo.data.model.CreatePallet.PalletStatus.CREATED
 import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.Serializable
 
+@Serializable
 @Parcelize
 data class ScanningPallet(
     val uid: String = "",

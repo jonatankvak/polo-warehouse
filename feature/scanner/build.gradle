@@ -13,10 +13,10 @@ android {
 dependencies {
 
     implementation(platform("com.google.firebase:firebase-bom:$firebaseBom"))
-    implementation("com.google.firebase:firebase-common-ktx")
-    implementation("com.google.firebase:firebase-firestore-ktx")
+    implementation("com.google.firebase:firebase-common")
+    implementation("com.google.firebase:firebase-firestore")
 
-    implementation("androidx.compose.material:material:$materialCompose")
+    implementation("androidx.compose.material:material")
 
     implementation("androidx.camera:camera-camera2:$camera2")
     implementation("androidx.camera:camera-lifecycle:$camera2")

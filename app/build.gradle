@@ -48,20 +48,12 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
-
-    kotlinOptions {
-        jvmTarget = '1.8'
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
 
     buildFeatures {
         compose true
-    }
-
-    composeOptions {
-        kotlinCompilerExtensionVersion '1.3.2'
     }
 
     packagingOptions {
@@ -78,6 +70,9 @@ dependencies {
     implementation("com.google.firebase:firebase-analytics")
 
     implementation("androidx.appcompat:appcompat:$appcompat")
+    implementation("androidx.navigation3:navigation3-runtime:$navigation3")
+    implementation("androidx.navigation3:navigation3-ui:$navigation3")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-navigation3:$lifecycleNav3")
 
     implementation(project(":libraries:core"))
     implementation(project(":libraries:core-data"))

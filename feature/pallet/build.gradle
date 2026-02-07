@@ -13,10 +13,10 @@ android {
 dependencies {
 
     implementation(platform("com.google.firebase:firebase-bom:$firebaseBom"))
-    implementation("com.google.firebase:firebase-common-ktx")
-    implementation("com.google.firebase:firebase-firestore-ktx")
+    implementation("com.google.firebase:firebase-common")
+    implementation("com.google.firebase:firebase-firestore")
 
-    implementation("androidx.compose.material:material:1.7.1")
+    implementation("androidx.compose.material:material")
 
     implementation(project(":libraries:core"))
     implementation(project(":libraries:core-data"))

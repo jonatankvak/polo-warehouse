@@ -3,7 +3,7 @@ package com.polo.data.datasource
 import android.content.res.Resources.NotFoundException
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query.Direction.DESCENDING
-import com.google.firebase.firestore.ktx.toObjects
+import com.google.firebase.firestore.toObjects
 import com.polo.data.functional.Either
 import com.polo.data.functional.runCatchingEither
 import com.polo.data.model.CreatePallet

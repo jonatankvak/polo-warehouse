@@ -5,6 +5,7 @@ import com.polo.data.model.CreatePallet.PalletStatus.CREATED
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.util.Date
+import kotlinx.serialization.Serializable
 
 data class CreatePallet(
     @ServerTimestamp
@@ -16,6 +17,7 @@ data class CreatePallet(
     val status: PalletStatus = CREATED
 ) {
 
+    @Serializable
     enum class PalletStatus {
         CREATED,
         READY,

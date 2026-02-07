@@ -9,6 +9,8 @@
 /.idea/navEditor.xml
 /.idea/assetWizardSettings.xml
 /google-services.json
+AGENTS.md
+/docs/todo/
 .DS_Store
 /build
 /captures
