@@ -1,7 +1,7 @@
 package com.polo.warehouse.activity
 
 import androidx.lifecycle.ViewModel
-import com.polo.data.datasource.IAuthenticationDataSource
+import com.polo.domain.repository.AuthenticationRepository
 import com.polo.warehouse.navigation.AppDestination
 import com.polo.warehouse.navigation.AuthenticationDestination
 import com.polo.warehouse.navigation.DashboardDestination
@@ -10,12 +10,12 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainActivityViewModel @Inject constructor(
-    private val authenticationDataSource: IAuthenticationDataSource
+    private val authenticationRepository: AuthenticationRepository
 ) : ViewModel() {
 
     fun getStartingDestination(): AppDestination {
         return when {
-            authenticationDataSource.isSignedIn() -> DashboardDestination
+            authenticationRepository.isSignedIn() -> DashboardDestination
             else -> AuthenticationDestination
         }
     }

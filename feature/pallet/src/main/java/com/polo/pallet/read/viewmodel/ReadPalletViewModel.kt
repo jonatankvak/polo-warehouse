@@ -3,11 +3,14 @@ package com.polo.pallet.read.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.polo.core_ui.model.UiPallet
-import com.polo.data.datasource.IFireStoreDataSource
-import com.polo.data.model.CreatePallet.PalletStatus.CREATED
-import com.polo.data.model.CreatePallet.PalletStatus.READY
-import com.polo.data.model.CreatePallet.PalletStatus.TRANSPORT
-import com.polo.data.model.Warehouse.ZABLACE
+import com.polo.domain.functional.Either
+import com.polo.domain.model.PalletStatus.CREATED
+import com.polo.domain.model.PalletStatus.READY
+import com.polo.domain.model.PalletStatus.TRANSPORT
+import com.polo.domain.model.WarehouseIds
+import com.polo.domain.repository.PalletRepository
+import com.polo.domain.repository.ProductRepository
+import com.polo.domain.repository.WarehouseRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import de.palm.composestateevents.StateEvent
 import de.palm.composestateevents.consumed
@@ -21,7 +24,9 @@ import kotlinx.coroutines.launch
 
 @HiltViewModel
 class ReadPalletViewModel @Inject constructor(
-    private val firestoreDataSource: IFireStoreDataSource
+    private val palletRepository: PalletRepository,
+    private val productRepository: ProductRepository,
+    private val warehouseRepository: WarehouseRepository
 ): ViewModel() {
 
     private val _state = MutableStateFlow(UiState())
@@ -31,35 +36,50 @@ class ReadPalletViewModel @Inject constructor(
 
         viewModelScope.launch(Dispatchers.IO) {
 
-            _state.update { current -> current.copy(isLoading = false) }
+            _state.update { current -> current.copy(isLoading = true) }
 
-            firestoreDataSource.getPallet(palletUid)
-                .onResult { pallet ->
-                    viewModelScope.launch(Dispatchers.IO) {
-                        val warehouse = firestoreDataSource.getWarehouse(pallet.warehouseUid).result()
-                        val product = firestoreDataSource.getProducts(pallet.productUid).result()
-                        _state.update { current -> current.copy(
-                                isLoading = false,
-                                pallet = UiPallet(
-                                    uid = pallet.uid,
-                                    date = pallet.date.toDate().toString(),
-                                    productName = product.name,
-                                    productAmount = pallet.productAmount,
-                                    createdBy = pallet.createdBy,
-                                    warehouseUid = pallet.warehouseUid,
-                                    warehouseName = warehouse.name,
-                                    status = pallet.status
-                                )
-                            )
-                        }
-                    }
-                }.onError {
+            when (val palletResult = palletRepository.getPallet(palletUid)) {
+                is Either.Error -> {
                     _state.update { current -> current.copy(
                             isLoading = false,
                             isError = triggered
                         )
                     }
                 }
+                is Either.Result -> {
+                    val pallet = palletResult.data
+                    when (val productResult = productRepository.getProduct(pallet.productUid)) {
+                        is Either.Error -> _state.update { current -> current.copy(
+                                isLoading = false,
+                                isError = triggered
+                            )
+                        }
+                        is Either.Result -> {
+                            when (val warehouseResult = warehouseRepository.getWarehouse(pallet.warehouseUid)) {
+                                is Either.Error -> _state.update { current -> current.copy(
+                                        isLoading = false,
+                                        isError = triggered
+                                    )
+                                }
+                                is Either.Result -> _state.update { current -> current.copy(
+                                        isLoading = false,
+                                        pallet = UiPallet(
+                                            uid = pallet.uid,
+                                            date = java.time.Instant.ofEpochMilli(pallet.dateEpochMillis).toString(),
+                                            productName = productResult.data.name,
+                                            productAmount = pallet.productAmount,
+                                            createdBy = pallet.createdBy,
+                                            warehouseUid = pallet.warehouseUid,
+                                            warehouseName = warehouseResult.data.name,
+                                            status = pallet.status
+                                        )
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -67,38 +87,35 @@ class ReadPalletViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             _state.update { current -> current.copy(isLoading = true) }
 
+            val currentPallet = state.value.pallet ?: run {
+                _state.update { current -> current.copy(isLoading = false) }
+                return@launch
+            }
+
             if (_state.value.isFinalDestination) {
-
-                state.value.pallet?.uid?.let {
-                    firestoreDataSource.deletePallet(it)
-                        .onResult {
-                            _state.update { current -> current.copy(isLoading = false, isDissolved = true) }
-                        }.onError {
-                            _state.update { current -> current.copy(isLoading = false) }
-                        }
-                }
+                palletRepository.deletePallet(currentPallet.uid)
+                    .onResult {
+                        _state.update { current -> current.copy(isLoading = false, isDissolved = true) }
+                    }.onError {
+                        _state.update { current -> current.copy(isLoading = false) }
+                    }
+                return@launch
             }
 
-            val (toStatus, toWarehouse) = when(_state.value.pallet?.status) {
-                READY -> Pair(TRANSPORT, state.value.pallet?.warehouseUid.orEmpty())
-                TRANSPORT -> Pair(READY, ZABLACE.id)
-                CREATED -> Pair(READY, state.value.pallet?.warehouseUid.orEmpty())
-                else -> {
-                    _state.update { current -> current.copy(isLoading = false) }
-                    return@launch
-                }
+            val (toStatus, toWarehouse) = when(currentPallet.status) {
+                READY -> Pair(TRANSPORT, currentPallet.warehouseUid)
+                TRANSPORT -> Pair(READY, WarehouseIds.ZABLACE)
+                CREATED -> Pair(READY, currentPallet.warehouseUid)
             }
 
-            firestoreDataSource.updatePalletStatus(_state.value.pallet?.uid.toString(), toStatus, toWarehouse)
+            palletRepository.updateStatus(currentPallet.uid, toStatus, toWarehouse)
                 .onResult {
                     _state.update { current -> current.copy(isLoading = false) }
                 }.onError {
                     _state.update { current -> current.copy(isLoading = false) }
                 }
 
-            state.value.pallet?.uid?.let {
-                getPallet(it)
-            }
+            getPallet(currentPallet.uid)
         }
     }
 
@@ -117,6 +134,6 @@ class ReadPalletViewModel @Inject constructor(
     ) {
 
         val isFinalDestination: Boolean
-            get() = (pallet?.warehouseUid == ZABLACE.id) and (pallet?.status == READY)
+            get() = (pallet?.warehouseUid == WarehouseIds.ZABLACE) and (pallet?.status == READY)
     }
 }

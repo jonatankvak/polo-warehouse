@@ -2,6 +2,7 @@ package com.polo.core_ui
 
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuAnchorType
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.MaterialTheme
@@ -31,14 +32,15 @@ fun <T: IDropdownSelectableText> TextFieldDropDownUi(
     onQueryChanged: (String) -> Unit = {}
 ) {
 
-    var textValue by remember { mutableStateOf(TextFieldValue(valueSelected?.displayName ?: "")) }
+    val displayName = valueSelected?.displayName.orEmpty()
+    var textValue by remember(displayName) { mutableStateOf(TextFieldValue(displayName)) }
     val localFocusManager = LocalFocusManager.current
     val focusRequester = remember { FocusRequester() }
     var expanded by remember { mutableStateOf(false) }
-
-    if (valueSelected == null) {
-
-//        textValue = TextFieldValue("")
+    val anchorType = if (readOnly) {
+        ExposedDropdownMenuAnchorType.PrimaryNotEditable
+    } else {
+        ExposedDropdownMenuAnchorType.PrimaryEditable
     }
 
     ExposedDropdownMenuBox(
@@ -50,7 +52,7 @@ fun <T: IDropdownSelectableText> TextFieldDropDownUi(
         TextField(
             readOnly = readOnly,
             modifier = Modifier
-                .menuAnchor()
+                .menuAnchor(anchorType)
                 .focusRequester(focusRequester),
             value = textValue,
             onValueChange = {

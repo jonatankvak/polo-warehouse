@@ -9,8 +9,8 @@ import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import com.polo.authentication.view.VerificationRoute
+import com.polo.core_ui.model.ScanningPallet
 import com.polo.dashboard.view.DashboardRoute
-import com.polo.data.model.ScanningPallet
 import com.polo.pallet.create.view.CreatePalletRoute
 import com.polo.pallet.read.view.ReadPalletRoute
 import com.polo.scanner.read.ScanPalletRoute

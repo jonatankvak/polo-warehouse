@@ -24,31 +24,33 @@ class QrCodeAnalyzer(
     }
 
     override fun analyze(image: ImageProxy) {
-        if (image.format !in SUPPORTED_IMAGE_FORMATS) return
-
-        val bytes = image.planes.first().buffer.toByteArray()
-        val source = PlanarYUVLuminanceSource(
-            bytes,
-            image.width,
-            image.height,
-            0,
-            0,
-            image.width,
-            image.height,
-            false
-        )
-        val binaryBitmap = BinaryBitmap(HybridBinarizer(source))
         try {
-            val result = MultiFormatReader().apply {
-                setHints(
-                    mapOf(
-                        DecodeHintType.POSSIBLE_FORMATS to listOf(BarcodeFormat.QR_CODE)
+            if (image.format !in SUPPORTED_IMAGE_FORMATS) return
+
+            val bytes = image.planes.first().buffer.toByteArray()
+            val source = PlanarYUVLuminanceSource(
+                bytes,
+                image.width,
+                image.height,
+                0,
+                0,
+                image.width,
+                image.height,
+                false
+            )
+            val binaryBitmap = BinaryBitmap(HybridBinarizer(source))
+            try {
+                val result = MultiFormatReader().apply {
+                    setHints(
+                        mapOf(
+                            DecodeHintType.POSSIBLE_FORMATS to listOf(BarcodeFormat.QR_CODE)
+                        )
                     )
-                )
-            }.decode(binaryBitmap)
-            onQrCodeScanned(result.text)
-        } catch (e: Exception) {
-            e.printStackTrace()
+                }.decode(binaryBitmap)
+                onQrCodeScanned(result.text)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
         } finally {
             image.close()
         }

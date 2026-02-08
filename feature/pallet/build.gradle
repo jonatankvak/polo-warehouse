@@ -1,13 +1,12 @@
 plugins {
     id 'com.android.library'
-    id 'org.jetbrains.kotlin.android'
 }
 
 apply from: rootDir.path + "/common.config.gradle"
 apply from: rootDir.path + "/common.dependencies.gradle"
 
 android {
-    namespace 'com.polo.pallet'
+    namespace = 'com.polo.pallet'
 }
 
 dependencies {
@@ -19,6 +18,6 @@ dependencies {
     implementation("androidx.compose.material:material")
 
     implementation(project(":libraries:core"))
-    implementation(project(":libraries:core-data"))
     implementation(project(":libraries:core-ui"))
+    implementation(project(":libraries:domain"))
 }

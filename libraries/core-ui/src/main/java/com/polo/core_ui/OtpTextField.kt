@@ -14,11 +14,11 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -38,13 +38,12 @@ fun OtpTextField(
         FocusRequester()
     }
 
+    LaunchedEffect(Unit) {
+        focusRequester.requestFocus()
+    }
+
     BasicTextField(
-        modifier = modifier
-            .focusRequester(focusRequester)
-            .onGloballyPositioned {
-                focusRequester.requestFocus()
-            }
-        ,
+        modifier = modifier.focusRequester(focusRequester),
         value = otpText,
         onValueChange = {
             if (it.length <= otpCount) {

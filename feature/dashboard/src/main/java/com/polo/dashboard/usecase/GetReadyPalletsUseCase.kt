@@ -2,12 +2,12 @@ package com.polo.dashboard.usecase
 
 import com.polo.dashboard.viewmodel.PalletListUiModel.PalletListUiBody
 import com.polo.dashboard.viewmodel.PalletListUiModel.PalletListUiHeader
-import com.polo.data.datasource.IFireStoreDataSource
-import com.polo.data.functional.Either
-import com.polo.data.model.CreatePallet.PalletStatus.READY
-import com.polo.data.model.PalletDocument
-import com.polo.data.model.ProductDocument
-import com.polo.data.model.WarehouseDocument
+import com.polo.domain.functional.Either
+import com.polo.domain.model.Pallet
+import com.polo.domain.model.PalletStatus.READY
+import com.polo.domain.model.Product
+import com.polo.domain.model.Warehouse
+import com.polo.domain.repository.PalletRepository
 import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -15,15 +15,15 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 
 class GetReadyPalletsUseCase @Inject constructor(
-    private val firestoreDataSource: IFireStoreDataSource
+    private val palletRepository: PalletRepository
 ) {
 
     suspend operator fun invoke(
-        products: List<ProductDocument>,
-        warehouses: List<WarehouseDocument>
+        products: List<Product>,
+        warehouses: List<Warehouse>
     ): Flow<Either<Exception, Map<PalletListUiHeader, List<PalletListUiBody>>>> {
         return withContext(Dispatchers.IO) {
-            firestoreDataSource.getAllPallets(READY)
+            palletRepository.observePallets(READY)
                 .map {
                     map(it, warehouses, products)
                 }
@@ -31,9 +31,9 @@ class GetReadyPalletsUseCase @Inject constructor(
     }
 
     private fun map(
-        response: Either<Exception, List<PalletDocument>>,
-        warehouses: List<WarehouseDocument>,
-        products: List<ProductDocument>
+        response: Either<Exception, List<Pallet>>,
+        warehouses: List<Warehouse>,
+        products: List<Product>
     ): Either<Exception, Map<PalletListUiHeader, List<PalletListUiBody>>> {
 
         if (response.isError) return response as Either.Error
@@ -48,9 +48,9 @@ class GetReadyPalletsUseCase @Inject constructor(
     }
 
     private fun createPalletListUiModel(
-        pallets: List<PalletDocument>,
-        warehouses: List<WarehouseDocument>,
-        products: List<ProductDocument>
+        pallets: List<Pallet>,
+        warehouses: List<Warehouse>,
+        products: List<Product>
     ): Map<PalletListUiHeader, List<PalletListUiBody>> {
 
         val palletListUiModelMap = mutableMapOf<PalletListUiHeader, List<PalletListUiBody>>()
@@ -68,7 +68,7 @@ class GetReadyPalletsUseCase @Inject constructor(
         return palletListUiModelMap
     }
 
-    private fun createPalletListUiBodies(palletsGroupedByProduct: Collection<List<PalletDocument>>, products: List<ProductDocument>): List<PalletListUiBody> {
+    private fun createPalletListUiBodies(palletsGroupedByProduct: Collection<List<Pallet>>, products: List<Product>): List<PalletListUiBody> {
 
         val bodies = mutableListOf<PalletListUiBody>()
 
@@ -86,11 +86,11 @@ class GetReadyPalletsUseCase @Inject constructor(
         return bodies
     }
 
-    private fun getWarehouseName(warehouseUid: String, warehouses: List<WarehouseDocument>): String {
+    private fun getWarehouseName(warehouseUid: String, warehouses: List<Warehouse>): String {
         return warehouses.findLast { it.uid == warehouseUid }?.name ?: throw Exception("Unsupported warehouse uid $warehouseUid")
     }
 
-    private fun getProductName(productUid: String, products: List<ProductDocument>): String {
+    private fun getProductName(productUid: String, products: List<Product>): String {
         return products.findLast { it.uid == productUid }?.name ?: throw Exception("Unsupported product uid $productUid")
     }
 }

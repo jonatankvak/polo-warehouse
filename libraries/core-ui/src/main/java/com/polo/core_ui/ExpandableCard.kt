@@ -6,7 +6,7 @@ import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.animation.core.animateDp
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.core.updateTransition
+import androidx.compose.animation.core.rememberTransition
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -44,7 +44,7 @@ fun ExpandableCard(
         }
     }
 
-    val transition = updateTransition(transitionState, label = "transition")
+    val transition = rememberTransition(transitionState, label = "transition")
 
     val cardRoundedCorners by transition.animateDp({
         tween(

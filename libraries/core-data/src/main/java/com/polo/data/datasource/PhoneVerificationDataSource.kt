@@ -12,8 +12,8 @@ import com.google.firebase.auth.PhoneAuthProvider.OnVerificationStateChangedCall
 import com.polo.data.datasource.PhoneVerificationDataSource.PhoneVerificationState.CodeSent
 import com.polo.data.datasource.PhoneVerificationDataSource.PhoneVerificationState.VerificationCompleted
 import com.polo.data.datasource.PhoneVerificationDataSource.PhoneVerificationState.VerificationFailed
-import com.polo.data.functional.Either
-import com.polo.data.functional.runCatchingEither
+import com.polo.domain.functional.Either
+import com.polo.domain.functional.runCatchingEither
 import java.util.concurrent.TimeUnit.SECONDS
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -31,10 +31,16 @@ class PhoneVerificationDataSource @Inject constructor(
         phoneNumber: String,
         token: ForceResendingToken?
     ) = callbackFlow {
+        val activity = context as? Activity
+        if (activity == null) {
+            trySend(VerificationFailed(FirebaseException("Phone verification requires an Activity context.")))
+            close()
+            return@callbackFlow
+        }
 
         val optionsBuilder = PhoneAuthOptions.newBuilder()
             .setTimeout(60L, SECONDS)
-            .setActivity(context as Activity)
+            .setActivity(activity)
             .setPhoneNumber(phoneNumber)
             .setCallbacks(
                 object : OnVerificationStateChangedCallbacks() {

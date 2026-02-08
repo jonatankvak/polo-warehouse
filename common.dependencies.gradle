@@ -54,6 +54,7 @@ dependencies {
     // Testing
 
     testImplementation("junit:junit:$junit")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutines")
     androidTestImplementation("androidx.test.ext:junit:$androidXJunit")
     androidTestImplementation("androidx.test.espresso:espresso-core:$espreso")
 }

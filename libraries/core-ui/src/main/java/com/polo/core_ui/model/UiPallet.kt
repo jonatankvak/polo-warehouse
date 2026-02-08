@@ -2,8 +2,8 @@ package com.polo.core_ui.model
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
-import com.polo.data.model.CreatePallet.PalletStatus
-import com.polo.data.model.CreatePallet.PalletStatus.CREATED
+import com.polo.domain.model.PalletStatus
+import com.polo.domain.model.PalletStatus.CREATED
 
 data class UiPallet(
     val uid: String = "",

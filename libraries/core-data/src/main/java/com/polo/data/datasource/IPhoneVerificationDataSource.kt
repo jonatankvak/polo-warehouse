@@ -4,7 +4,7 @@ import android.content.Context
 import com.google.firebase.auth.PhoneAuthCredential
 import com.google.firebase.auth.PhoneAuthProvider.ForceResendingToken
 import com.polo.data.datasource.PhoneVerificationDataSource.PhoneVerificationState
-import com.polo.data.functional.Either
+import com.polo.domain.functional.Either
 import kotlinx.coroutines.flow.Flow
 
 interface IPhoneVerificationDataSource {

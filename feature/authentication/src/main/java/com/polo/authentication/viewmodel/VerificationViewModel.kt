@@ -4,12 +4,12 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.PhoneAuthProvider.ForceResendingToken
-import com.polo.data.datasource.IAuthenticationDataSource
 import com.polo.data.datasource.IPhoneVerificationDataSource
 import com.polo.data.datasource.PhoneVerificationDataSource.PhoneVerificationState
 import com.polo.data.datasource.PhoneVerificationDataSource.PhoneVerificationState.CodeSent
 import com.polo.data.datasource.PhoneVerificationDataSource.PhoneVerificationState.VerificationCompleted
 import com.polo.data.datasource.PhoneVerificationDataSource.PhoneVerificationState.VerificationFailed
+import com.polo.domain.repository.AuthenticationRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,7 +20,7 @@ import kotlinx.coroutines.launch
 
 @HiltViewModel
 class VerificationViewModel @Inject constructor(
-    private val authenticationDataSource: IAuthenticationDataSource,
+    private val authenticationRepository: AuthenticationRepository,
     private val verificationDataSource: IPhoneVerificationDataSource
 ): ViewModel() {
 
@@ -87,7 +87,7 @@ class VerificationViewModel @Inject constructor(
 
             _state.update { _state.value.copy(isLoading = true, isError = false, errorMessage = "") }
 
-            authenticationDataSource
+            authenticationRepository
                 .updateName("$firstName $lastName")
                 .either(
                     ::handleNameError,
@@ -112,7 +112,7 @@ class VerificationViewModel @Inject constructor(
 
     private fun handleSingInSuccess() {
 
-        val nameResult = authenticationDataSource.getName()
+        val nameResult = authenticationRepository.getName()
 
         _state.update {
             _state.value.copy(isUserSignedIn = true, isLoading = false, isNameProvided = nameResult.isNotBlank())

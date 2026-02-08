@@ -10,12 +10,13 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
-        maven { url "https://jitpack.io" }
+        maven { url = uri("https://jitpack.io") }
     }
 }
 rootProject.name = "Polo Warehouse"
 include ':app'
 include ':libraries:core'
+include ':libraries:domain'
 include ':libraries:core-data'
 include ':feature:authentication'
 include ':feature:dashboard'

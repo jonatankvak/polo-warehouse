@@ -9,12 +9,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -30,10 +30,10 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.polo.core_ui.PalletCardBodyUi
 import com.polo.core_ui.PalletCardTitleUi
 import com.polo.core_ui.SlideToUnlock
-import com.polo.data.model.CreatePallet.PalletStatus
-import com.polo.data.model.CreatePallet.PalletStatus.CREATED
-import com.polo.data.model.CreatePallet.PalletStatus.READY
-import com.polo.data.model.CreatePallet.PalletStatus.TRANSPORT
+import com.polo.domain.model.PalletStatus
+import com.polo.domain.model.PalletStatus.CREATED
+import com.polo.domain.model.PalletStatus.READY
+import com.polo.domain.model.PalletStatus.TRANSPORT
 import com.polo.pallet.read.viewmodel.ReadPalletViewModel
 import com.polo.pallet.read.viewmodel.ReadPalletViewModel.UiState
 import de.palm.composestateevents.EventEffect
@@ -139,7 +139,7 @@ fun PalletStatusUi(
             .fillMaxWidth()
             .focusable(false)
             .clickable(false, onClick = {}),
-        shape = TextFieldDefaults.outlinedShape,
+        shape = OutlinedTextFieldDefaults.shape,
         readOnly = true,
         value = palletStatus.name,
         onValueChange = { },

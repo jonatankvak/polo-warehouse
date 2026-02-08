@@ -6,13 +6,14 @@ import androidx.lifecycle.viewModelScope
 import com.polo.core_ui.model.UiPallet
 import com.polo.core_ui.model.UiProduct
 import com.polo.core_ui.model.UiWarehouse
-import com.polo.data.datasource.IAuthenticationDataSource
-import com.polo.data.datasource.IFireStoreDataSource
-import com.polo.data.model.CreatePallet
+import com.polo.domain.model.CreatePallet
+import com.polo.domain.repository.AuthenticationRepository
+import com.polo.domain.repository.PalletRepository
 import com.polo.pallet.create.usecase.GetAllCreatedPalletsUseCase
 import com.polo.pallet.create.usecase.GetAllProductsAndWarehousesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import de.palm.composestateevents.StateEvent
+import de.palm.composestateevents.StateEventWithContent
 import de.palm.composestateevents.consumed
 import de.palm.composestateevents.triggered
 import javax.inject.Inject
@@ -25,10 +26,10 @@ import kotlinx.coroutines.launch
 
 @HiltViewModel
 class CreatePalletViewModel @Inject constructor(
-    private val firestoreDataSource: IFireStoreDataSource,
+    private val palletRepository: PalletRepository,
     private val getAllProductsAndWarehousesUseCase: GetAllProductsAndWarehousesUseCase,
     private val getAllCreatedPalletsUseCase: GetAllCreatedPalletsUseCase,
-    private val authenticationDataSource: IAuthenticationDataSource
+    private val authenticationRepository: AuthenticationRepository
 ): ViewModel() {
 
     private val _state = MutableStateFlow(UiState(isLoading = true))
@@ -55,7 +56,7 @@ class CreatePalletViewModel @Inject constructor(
                     }
 
                 }.onError { exception ->
-
+                    _state.update { current -> current.copy(isLoading = false, isError = triggered(exception.message)) }
                     Log.e("FIRESTORE_APP", exception.message, exception)
                 }
         }
@@ -71,16 +72,17 @@ class CreatePalletViewModel @Inject constructor(
 
             _state.update { current -> current.copy(isLoading = true) }
 
-            firestoreDataSource.createPallets(
+            palletRepository.createPallet(
                 CreatePallet(
                     productUid = product.uid,
                     warehouseUid = warehouse.uid,
                     productAmount = amount,
-                    createdBy = authenticationDataSource.getName()
+                    createdBy = authenticationRepository.getName()
                 )
             ).onResult {
                 _state.update { current -> current.copy(isLoading = false, isPalletCreated = triggered) }
             }.onError { exception ->
+                _state.update { current -> current.copy(isLoading = false, isError = triggered(exception.message)) }
                 Log.e("FIRESTORE_APP", exception.message, exception)
             }
         }
@@ -94,10 +96,11 @@ class CreatePalletViewModel @Inject constructor(
 
             _state.update { current -> current.copy(isLoading = true) }
 
-            firestoreDataSource.deletePallet(pallet.uid)
+            palletRepository.deletePallet(pallet.uid)
                 .onResult {
                     _state.update { current -> current.copy(isLoading = false) }
                 }.onError { exception ->
+                    _state.update { current -> current.copy(isLoading = false, isError = triggered(exception.message)) }
                     Log.e("FIRESTORE_APP", exception.message, exception)
                 }
         }
@@ -119,10 +122,15 @@ class CreatePalletViewModel @Inject constructor(
                 response.onResult { pallets ->
                     _state.update { current -> current.copy(pallets = pallets, isLoading = false) }
                 }.onError { exception ->
+                    _state.update { current -> current.copy(isLoading = false, isError = triggered(exception.message)) }
                     Log.e("FIRESTORE_APP", exception.message, exception)
                 }
             }
         }
+    }
+
+    fun errorConsumed() {
+        _state.update { current -> current.copy(isError = consumed()) }
     }
 
     data class UiState(
@@ -130,6 +138,7 @@ class CreatePalletViewModel @Inject constructor(
         val products: List<UiProduct> = emptyList(),
         val warehouses: List<UiWarehouse> = emptyList(),
         val pallets: List<UiPallet> = emptyList(),
-        val isPalletCreated: StateEvent = consumed
+        val isPalletCreated: StateEvent = consumed,
+        val isError: StateEventWithContent<String?> = consumed()
     )
 }

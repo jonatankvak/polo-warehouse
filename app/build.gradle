@@ -1,6 +1,5 @@
 plugins {
     id 'com.android.application'
-    id 'org.jetbrains.kotlin.android'
     id 'com.google.gms.google-services'
     id 'com.google.firebase.crashlytics'
 }
@@ -9,7 +8,7 @@ apply from: rootDir.path + "/common.config.gradle"
 apply from: rootDir.path + "/common.dependencies.gradle"
 
 android {
-    namespace 'com.polo.warehouse'
+    namespace = 'com.polo.warehouse'
     compileSdk compile_sdk
 
     defaultConfig {
@@ -21,7 +20,7 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
-            useSupportLibrary true
+            useSupportLibrary = true
         }
     }
 
@@ -29,19 +28,16 @@ android {
         debug {
             applicationIdSuffix(".debug")
             debuggable = true
-            resValue("string", "app_name", "W-Debug")
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
 
         staging {
             applicationIdSuffix(".alpha")
-            resValue("string", "app_name", "W-Alpha")
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
 
         release {
-            resValue("string", "app_name", "Warehouse")
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
@@ -53,7 +49,7 @@ android {
     }
 
     buildFeatures {
-        compose true
+        compose = true
     }
 
     packagingOptions {
@@ -76,6 +72,8 @@ dependencies {
 
     implementation(project(":libraries:core"))
     implementation(project(":libraries:core-data"))
+    implementation(project(":libraries:core-ui"))
+    implementation(project(":libraries:domain"))
     implementation(project(":feature:authentication"))
     implementation(project(":feature:dashboard"))
     implementation(project(":feature:pallet"))

@@ -5,10 +5,11 @@ import androidx.lifecycle.viewModelScope
 import com.polo.dashboard.usecase.GetReadyPalletsUseCase
 import com.polo.dashboard.viewmodel.PalletListUiModel.PalletListUiBody
 import com.polo.dashboard.viewmodel.PalletListUiModel.PalletListUiHeader
-import com.polo.data.datasource.IAuthenticationDataSource
-import com.polo.data.datasource.IFireStoreDataSource
-import com.polo.data.model.ProductDocument
-import com.polo.data.model.WarehouseDocument
+import com.polo.domain.model.Product
+import com.polo.domain.model.Warehouse
+import com.polo.domain.repository.AuthenticationRepository
+import com.polo.domain.repository.ProductRepository
+import com.polo.domain.repository.WarehouseRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import de.palm.composestateevents.StateEventWithContent
 import de.palm.composestateevents.consumed
@@ -22,13 +23,14 @@ import kotlinx.coroutines.launch
 
 @HiltViewModel
 class DashboardViewModel @Inject constructor(
-    private val authenticationDataSource: IAuthenticationDataSource,
-    private val firestoreDataSource: IFireStoreDataSource,
+    private val authenticationRepository: AuthenticationRepository,
+    private val productRepository: ProductRepository,
+    private val warehouseRepository: WarehouseRepository,
     private val getPalletsUseCase: GetReadyPalletsUseCase
 ): ViewModel() {
 
-    private var loadedProducts: List<ProductDocument> = emptyList()
-    private var loadedWarehouses: List<WarehouseDocument> = emptyList()
+    private var loadedProducts: List<Product> = emptyList()
+    private var loadedWarehouses: List<Warehouse> = emptyList()
 
     private val _state = MutableStateFlow(UiState(name = getName()))
     val state: StateFlow<UiState> = _state
@@ -73,16 +75,16 @@ class DashboardViewModel @Inject constructor(
 
     private suspend fun getAllProductsAndWarehouses() {
 
-        firestoreDataSource.getAllProductsAndWarehouses()
-            .onResult {
-                loadedProducts = it.first
-                loadedWarehouses = it.second
-            }
+        val productsResult = productRepository.getAllProducts()
+        val warehousesResult = warehouseRepository.getAllWarehouses()
+
+        productsResult.onResult { loadedProducts = it }
+        warehousesResult.onResult { loadedWarehouses = it }
     }
 
     private fun getName(): String {
 
-        return authenticationDataSource.getName()
+        return authenticationRepository.getName()
     }
 
     data class UiState(

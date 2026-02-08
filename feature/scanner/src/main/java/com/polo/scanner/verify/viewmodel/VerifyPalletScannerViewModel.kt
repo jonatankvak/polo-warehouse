@@ -3,8 +3,8 @@ package com.polo.scanner.verify.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.polo.core_ui.model.UiPallet
-import com.polo.data.datasource.IFireStoreDataSource
-import com.polo.data.model.CreatePallet.PalletStatus.READY
+import com.polo.domain.model.PalletStatus.READY
+import com.polo.domain.repository.PalletRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import de.palm.composestateevents.StateEvent
 import de.palm.composestateevents.StateEventWithContent
@@ -18,7 +18,7 @@ import kotlinx.coroutines.launch
 
 @HiltViewModel
 class VerifyPalletScannerViewModel @Inject constructor(
-    private val firestoreDataSource: IFireStoreDataSource
+    private val palletRepository: PalletRepository
 ): ViewModel() {
 
     private val _state = MutableStateFlow(UiState())
@@ -38,13 +38,13 @@ class VerifyPalletScannerViewModel @Inject constructor(
 
             _state.update { current -> current.copy(isLoading = true) }
 
-            firestoreDataSource.updatePalletStatus(
+            palletRepository.updateStatus(
                 palletUid = pallet.uid,
                 status = READY
             ).onResult {
-                _state.update { current -> current.copy(isPalletStatusUpdated = triggered) }
+                _state.update { current -> current.copy(isPalletStatusUpdated = triggered, isLoading = false) }
             }.onError {
-                _state.update { current -> current.copy(isError = triggered(it.message)) }
+                _state.update { current -> current.copy(isError = triggered(it.message), isLoading = false) }
             }
         }
     }

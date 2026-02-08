@@ -27,8 +27,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.polo.core_ui.PalletCardUi
+import com.polo.core_ui.model.ScanningPallet
 import com.polo.core_ui.model.UiPallet
-import com.polo.data.model.ScanningPallet
 import com.polo.scanner.R
 import com.polo.scanner.R.string
 import com.polo.scanner.scanner.QrScannerUi
@@ -44,17 +44,7 @@ fun VerifyPalletScannerRoute(
     onBack: () -> Unit,
     viewModel: VerifyPalletScannerViewModel = hiltViewModel()
 ) {
-    val uiPallet = remember(pallet) {
-        UiPallet(
-            uid = pallet.uid,
-            date = pallet.date,
-            productName = pallet.productName,
-            productAmount = pallet.productAmount,
-            createdBy = pallet.createdBy,
-            warehouseName = pallet.warehouseName,
-            status = pallet.status
-        )
-    }
+    val uiPallet = remember(pallet) { pallet.toUiPallet() }
 
     val context = LocalContext.current
     val mediaPlayer = remember {
@@ -94,6 +84,18 @@ fun VerifyPalletScannerRoute(
             onErrorConsumed = viewModel::scannedIsErrorConsumed
         )
     }
+}
+
+private fun ScanningPallet.toUiPallet(): UiPallet {
+    return UiPallet(
+        uid = uid,
+        date = date,
+        productName = productName,
+        productAmount = productAmount,
+        createdBy = createdBy,
+        warehouseName = warehouseName,
+        status = status
+    )
 }
 
 @ExperimentalMaterial3Api

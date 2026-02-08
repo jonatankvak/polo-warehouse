@@ -13,7 +13,7 @@ buildscript {
         junit = "4.13.2"
         androidXJunit = "1.3.0"
         espreso = "3.7.0"
-        hiltAndroid = "2.57.1"
+        hiltAndroid = "2.59"
         firebaseBom = "34.7.0"
         navigation3 = "1.0.0"
         lifecycleNav3 = "2.10.0"
@@ -23,11 +23,11 @@ buildscript {
         googleServices = "4.4.4"
         camera2 = "1.5.3"
         zxing = "3.5.4"
-        ksp = "2.3.0"
+        ksp = "2.3.2"
     }
 
     repositories {
-        maven { url "https://jitpack.io" }
+        maven { url = uri("https://jitpack.io") }
         google()
         mavenCentral()
     }
@@ -44,8 +44,9 @@ plugins {
     id("com.android.application") version '9.0.0' apply false
     id("com.android.library") version '9.0.0' apply false
     id("org.jetbrains.kotlin.android") version "2.2.21" apply false
+    id("org.jetbrains.kotlin.jvm") version "2.2.21" apply false
     id("org.jlleitschuh.gradle.ktlint") version "10.2.1"
     id("org.jetbrains.kotlin.plugin.compose") version "2.2.21"
     id("org.jetbrains.kotlin.plugin.serialization") version "2.2.21" apply false
-    id("com.google.devtools.ksp") version "2.3.0" apply false
+    id("com.google.devtools.ksp") version "2.3.2" apply false
 }

@@ -1,10 +1,15 @@
-@file:OptIn(ExperimentalMaterialApi::class)
+@file:OptIn(androidx.compose.foundation.ExperimentalFoundationApi::class)
 
 package com.polo.core_ui
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.AnchoredDraggableDefaults
+import androidx.compose.foundation.gestures.AnchoredDraggableState
+import androidx.compose.foundation.gestures.DraggableAnchors
+import androidx.compose.foundation.gestures.FlingBehavior
 import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.anchoredDraggable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.PaddingValues
@@ -15,15 +20,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.FractionalThreshold
-import androidx.compose.material.SwipeProgress
-import androidx.compose.material.SwipeableDefaults
-import androidx.compose.material.SwipeableState
 import androidx.compose.material.icons.Icons.AutoMirrored.Filled
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
-import androidx.compose.material.rememberSwipeableState
-import androidx.compose.material.swipeable
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -31,8 +29,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -45,7 +45,11 @@ import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.times
+import androidx.compose.animation.core.spring
+import androidx.compose.foundation.gestures.animateTo
 import kotlin.math.roundToInt
+
+private const val SnapThreshold = 0.8f
 
 @Composable
 fun SlideToUnlock(
@@ -55,31 +59,48 @@ fun SlideToUnlock(
     modifier: Modifier = Modifier,
 ) {
     val hapticFeedback = LocalHapticFeedback.current
-    val swipeState = rememberSwipeableState(
-        initialValue = if (isLoading) Anchor.End else Anchor.Start,
-        confirmStateChange = { anchor ->
-            if (anchor == Anchor.End) {
-                hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
-                onUnlockRequested()
-            }
-            true
+    val onUnlockRequestedState by rememberUpdatedState(onUnlockRequested)
+    val initialAnchors = remember {
+        DraggableAnchors {
+            Anchor.Start at 0f
+            Anchor.End at 0f
         }
-    )
-
-    val swipeFraction by remember {
-        derivedStateOf { calculateSwipeFraction(swipeState.progress) }
     }
+    val swipeState = remember {
+        AnchoredDraggableState(
+            if (isLoading) Anchor.End else Anchor.Start,
+            initialAnchors
+        )
+    }
+
+    val flingBehavior = AnchoredDraggableDefaults.flingBehavior(
+        state = swipeState,
+        positionalThreshold = { distance: Float -> distance * SnapThreshold },
+        animationSpec = spring()
+    )
 
     LaunchedEffect(isLoading) {
         swipeState.animateTo(if (isLoading) Anchor.End else Anchor.Start)
     }
 
+    var hasTriggered by remember { mutableStateOf(false) }
+    LaunchedEffect(swipeState.currentValue, isLoading) {
+        when (swipeState.currentValue) {
+            Anchor.End -> if (!hasTriggered && !isLoading) {
+                hasTriggered = true
+                hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
+                onUnlockRequestedState()
+            }
+            Anchor.Start -> hasTriggered = false
+        }
+    }
+
     Track(
         swipeState = swipeState,
-        swipeFraction = swipeFraction,
+        flingBehavior = flingBehavior,
         enabled = !isLoading,
         modifier = modifier,
-    ) {
+    ) { swipeFraction ->
         Hint(
             text = text,
             swipeFraction = swipeFraction,
@@ -91,19 +112,9 @@ fun SlideToUnlock(
         Thumb(
             isLoading = isLoading,
             modifier = Modifier.offset {
-                IntOffset(swipeState.offset.value.roundToInt(), 0)
+                IntOffset(swipeState.requireOffset().roundToInt(), 0)
             },
         )
-    }
-}
-
-fun calculateSwipeFraction(progress: SwipeProgress<Anchor>): Float {
-    val atAnchor = progress.from == progress.to
-    val fromStart = progress.from == Anchor.Start
-    return if (atAnchor) {
-        if (fromStart) 0f else 1f
-    } else {
-        if (fromStart) progress.fraction else 1f - progress.fraction
     }
 }
 
@@ -111,50 +122,54 @@ enum class Anchor { Start, End }
 
 @Composable
 fun Track(
-    swipeState: SwipeableState<Anchor>,
-    swipeFraction: Float,
+    swipeState: AnchoredDraggableState<Anchor>,
+    flingBehavior: FlingBehavior,
     enabled: Boolean,
     modifier: Modifier = Modifier,
-    content: @Composable (BoxScope.() -> Unit),
+    content: @Composable BoxScope.(Float) -> Unit,
 ) {
     val density = LocalDensity.current
-    var fullWidth by remember { mutableIntStateOf(0) }
+    var endOfTrackPx by remember { mutableFloatStateOf(0f) }
 
     val horizontalPadding = 10.dp
 
     val startOfTrackPx = 0f
-    val endOfTrackPx = remember(fullWidth) {
-        with(density) { fullWidth - (2 * horizontalPadding + Thumb.Size).toPx() }
-    }
 
-    val snapThreshold = 0.8f
-    val thresholds = { from: Anchor, _: Anchor ->
-        if (from == Anchor.Start) {
-            FractionalThreshold(snapThreshold)
-        } else {
-            FractionalThreshold(1f - snapThreshold)
+    val swipeFraction by remember {
+        derivedStateOf {
+            if (endOfTrackPx <= 0f || swipeState.offset.isNaN()) {
+                0f
+            } else {
+                (swipeState.requireOffset() / endOfTrackPx).coerceIn(0f, 1f)
+            }
         }
     }
 
-    val backgroundColor by remember(swipeFraction) {
+    val backgroundColor by remember {
         derivedStateOf { calculateTrackColor(swipeFraction) }
     }
 
     Box(
         modifier = modifier
-            .onSizeChanged { fullWidth = it.width }
+            .onSizeChanged { size ->
+                endOfTrackPx = with(density) {
+                    size.width - (2 * horizontalPadding + Thumb.Size).toPx()
+                }
+                if (endOfTrackPx > 0f) {
+                    val anchors = DraggableAnchors {
+                        Anchor.Start at startOfTrackPx
+                        Anchor.End at endOfTrackPx
+                    }
+                    swipeState.updateAnchors(anchors)
+                }
+            }
             .height(56.dp)
             .fillMaxWidth()
-            .swipeable(
+            .anchoredDraggable(
                 enabled = enabled,
                 state = swipeState,
                 orientation = Orientation.Horizontal,
-                anchors = mapOf(
-                    startOfTrackPx to Anchor.Start,
-                    endOfTrackPx to Anchor.End,
-                ),
-                thresholds = thresholds,
-                velocityThreshold = Track.VelocityThreshold,
+                flingBehavior = flingBehavior
             )
             .background(
                 color = backgroundColor,
@@ -166,7 +181,7 @@ fun Track(
                     vertical = 8.dp,
                 )
             ),
-        content = content,
+        content = { content(swipeFraction) },
     )
 }
 
@@ -233,6 +248,4 @@ private object Thumb {
     val Size = 40.dp
 }
 
-private object Track {
-    val VelocityThreshold = SwipeableDefaults.VelocityThreshold * 10
-}
+private object Track

@@ -2,14 +2,15 @@ package com.polo.data.datasource
 
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.UserProfileChangeRequest
-import com.polo.data.functional.Either
-import com.polo.data.functional.runCatchingEither
+import com.polo.domain.functional.Either
+import com.polo.domain.functional.runCatchingEither
+import com.polo.domain.repository.AuthenticationRepository
 import javax.inject.Inject
 import kotlinx.coroutines.tasks.await
 
 class AuthenticationDataSource @Inject constructor(
     private val firebaseAuth: FirebaseAuth
-): IAuthenticationDataSource {
+): AuthenticationRepository {
 
     override fun isSignedIn(): Boolean {
 

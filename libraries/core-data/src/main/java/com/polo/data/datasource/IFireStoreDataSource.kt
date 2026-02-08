@@ -1,6 +1,6 @@
 package com.polo.data.datasource
 
-import com.polo.data.functional.Either
+import com.polo.domain.functional.Either
 import com.polo.data.model.CreatePallet
 import com.polo.data.model.CreatePallet.PalletStatus
 import com.polo.data.model.CreatePallet.PalletStatus.CREATED

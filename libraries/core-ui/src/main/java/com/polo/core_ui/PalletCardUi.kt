@@ -14,8 +14,8 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -70,7 +70,7 @@ fun PalletCardTitleUi(
                     .fillMaxWidth()
                     .focusable(false)
                     .clickable(false, onClick = {}),
-                shape = TextFieldDefaults.outlinedShape,
+                shape = OutlinedTextFieldDefaults.shape,
                 readOnly = true,
                 value = pallet.uid,
                 onValueChange = { },
@@ -96,7 +96,7 @@ fun PalletCardTitleUi(
                         .fillMaxWidth()
                         .focusable(false)
                         .clickable(false, onClick = {}),
-                    shape = TextFieldDefaults.outlinedShape,
+                    shape = OutlinedTextFieldDefaults.shape,
                     readOnly = true,
                     value = pallet.productName,
                     onValueChange = { },
@@ -115,7 +115,7 @@ fun PalletCardTitleUi(
                         .padding(bottom = 8.dp)
                         .fillMaxWidth()
                         .clickable(false, onClick = {}),
-                    shape = TextFieldDefaults.outlinedShape,
+                    shape = OutlinedTextFieldDefaults.shape,
                     readOnly = true,
                     value = pallet.productAmount.toString(),
                     onValueChange = { },
@@ -139,7 +139,7 @@ fun PalletCardBodyUi(
                 .padding(bottom = 8.dp)
                 .fillMaxWidth()
                 .clickable(false, onClick = {}),
-            shape = TextFieldDefaults.outlinedShape,
+            shape = OutlinedTextFieldDefaults.shape,
             readOnly = true,
             value = pallet.date,
             onValueChange = { },
@@ -151,7 +151,7 @@ fun PalletCardBodyUi(
                 .padding(bottom = 8.dp)
                 .fillMaxWidth()
                 .clickable(false, onClick = {}),
-            shape = TextFieldDefaults.outlinedShape,
+            shape = OutlinedTextFieldDefaults.shape,
             readOnly = true,
             value = pallet.warehouseName,
             onValueChange = { },
@@ -163,7 +163,7 @@ fun PalletCardBodyUi(
                 .fillMaxWidth()
                 .padding(bottom = 16.dp)
                 .clickable(false, onClick = {}),
-            shape = TextFieldDefaults.outlinedShape,
+            shape = OutlinedTextFieldDefaults.shape,
             readOnly = true,
             value = pallet.createdBy,
             onValueChange = { },
