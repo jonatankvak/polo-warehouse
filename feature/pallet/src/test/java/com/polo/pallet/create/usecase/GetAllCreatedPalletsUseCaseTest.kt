@@ -1,8 +1,7 @@
 package com.polo.pallet.create.usecase
 
-import com.polo.core_ui.model.UiProduct
-import com.polo.core_ui.model.UiWarehouse
-import com.polo.domain.functional.Either
+import com.polo.ui.model.UiProduct
+import com.polo.ui.model.UiWarehouse
 import com.polo.domain.model.Pallet
 import com.polo.domain.model.PalletStatus
 import com.polo.domain.repository.PalletRepository
@@ -38,8 +37,8 @@ class GetAllCreatedPalletsUseCaseTest {
         val resultFlow = useCase(products, warehouses)
         val result = resultFlow.first()
 
-        assertTrue(result is Either.Result)
-        val uiPallets = (result as Either.Result).data
+        assertTrue(result.isSuccess)
+        val uiPallets = result.getOrThrow()
         assertEquals(1, uiPallets.size)
         assertEquals("Widget", uiPallets.first().productName)
         assertEquals("Main", uiPallets.first().warehouseName)
@@ -49,20 +48,20 @@ class GetAllCreatedPalletsUseCaseTest {
     private class FakePalletRepository(
         private val pallets: List<Pallet>
     ) : PalletRepository {
-        override suspend fun observePallets(status: PalletStatus): Flow<Either<Exception, List<Pallet>>> {
-            return flowOf(Either.Result(pallets))
+        override suspend fun observePallets(status: PalletStatus): Flow<Result<List<Pallet>>> {
+            return flowOf(Result.success(pallets))
         }
 
-        override suspend fun getPallet(palletUid: String): Either<Exception, Pallet> = throw UnsupportedOperationException()
+        override suspend fun getPallet(palletUid: String): Result<Pallet> = throw UnsupportedOperationException()
 
         override suspend fun updateStatus(
             palletUid: String,
             status: PalletStatus,
             warehouseUid: String?
-        ): Either<Exception, Unit> = throw UnsupportedOperationException()
+        ): Result<Unit> = throw UnsupportedOperationException()
 
-        override suspend fun createPallet(pallet: com.polo.domain.model.CreatePallet): Either<Exception, Unit> = throw UnsupportedOperationException()
+        override suspend fun createPallet(pallet: com.polo.domain.model.CreatePallet): Result<Unit> = throw UnsupportedOperationException()
 
-        override suspend fun deletePallet(palletUid: String): Either<Exception, Unit> = throw UnsupportedOperationException()
+        override suspend fun deletePallet(palletUid: String): Result<Unit> = throw UnsupportedOperationException()
     }
 }

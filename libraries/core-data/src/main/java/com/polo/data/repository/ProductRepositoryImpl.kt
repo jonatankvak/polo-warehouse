@@ -1,35 +1,25 @@
 package com.polo.data.repository
 
-import com.polo.data.datasource.IFireStoreDataSource
+import com.polo.data.datasource.FirestoreDataSource
 import com.polo.data.model.ProductDocument
-import com.polo.domain.functional.Either
 import com.polo.domain.model.Product
 import com.polo.domain.repository.ProductRepository
 import javax.inject.Inject
 
 class ProductRepositoryImpl @Inject constructor(
-    private val firestoreDataSource: IFireStoreDataSource
+    private val firestoreDataSource: FirestoreDataSource
 ) : ProductRepository {
 
-    override suspend fun getAllProducts(): Either<Exception, List<Product>> {
-        return when (val response = firestoreDataSource.getAllProducts()) {
-            is Either.Result -> Either.Result(response.data.map { it.toDomain() })
-            is Either.Error -> Either.Error(response.data)
-        }
+    override suspend fun getAllProducts(): Result<List<Product>> {
+        return firestoreDataSource.getAllProducts().map { productDocuments -> productDocuments.map { it.toDomain() } }
     }
 
-    override suspend fun getProduct(productUid: String): Either<Exception, Product> {
-        return when (val response = firestoreDataSource.getProducts(productUid)) {
-            is Either.Result -> Either.Result(response.data.toDomain())
-            is Either.Error -> Either.Error(response.data)
-        }
+    override suspend fun getProduct(productUid: String): Result<Product> {
+        return firestoreDataSource.getProducts(productUid).map { it.toDomain() }
     }
 
-    override suspend fun queryProductsByName(query: String): Either<Exception, List<Product>> {
-        return when (val response = firestoreDataSource.queryForProduct(query)) {
-            is Either.Result -> Either.Result(response.data.map { it.toDomain() })
-            is Either.Error -> Either.Error(response.data)
-        }
+    override suspend fun queryProductsByName(query: String): Result<List<Product>> {
+        return firestoreDataSource.queryForProduct(query).map { productDocuments -> productDocuments.map { it.toDomain() } }
     }
 
     private fun ProductDocument.toDomain(): Product {
@@ -38,7 +28,7 @@ class ProductRepositoryImpl @Inject constructor(
             idNumber = idNumber,
             name = name,
             barCode = barCode,
-            price = price,
+            price = price?.takeIf { it > 0f },
             transportPackage = transportPackage
         )
     }

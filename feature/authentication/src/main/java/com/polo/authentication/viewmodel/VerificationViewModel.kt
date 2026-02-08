@@ -3,13 +3,12 @@ package com.polo.authentication.viewmodel
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.firebase.auth.PhoneAuthProvider.ForceResendingToken
-import com.polo.data.datasource.IPhoneVerificationDataSource
-import com.polo.data.datasource.PhoneVerificationDataSource.PhoneVerificationState
-import com.polo.data.datasource.PhoneVerificationDataSource.PhoneVerificationState.CodeSent
-import com.polo.data.datasource.PhoneVerificationDataSource.PhoneVerificationState.VerificationCompleted
-import com.polo.data.datasource.PhoneVerificationDataSource.PhoneVerificationState.VerificationFailed
 import com.polo.domain.repository.AuthenticationRepository
+import com.polo.verification.PhoneVerificationService
+import com.polo.verification.PhoneVerificationState
+import com.polo.verification.PhoneVerificationState.CodeSent
+import com.polo.verification.PhoneVerificationState.VerificationCompleted
+import com.polo.verification.PhoneVerificationState.VerificationFailed
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,14 +20,13 @@ import kotlinx.coroutines.launch
 @HiltViewModel
 class VerificationViewModel @Inject constructor(
     private val authenticationRepository: AuthenticationRepository,
-    private val verificationDataSource: IPhoneVerificationDataSource
+    private val verificationService: PhoneVerificationService
 ): ViewModel() {
 
     private val _state = MutableStateFlow(UiState())
     val state: StateFlow<UiState> = _state
 
     private var verificationId: String = ""
-    private var resendToken: ForceResendingToken? = null
     private var phoneNumber: String = ""
 
     fun verifyPhoneNumber(
@@ -40,7 +38,7 @@ class VerificationViewModel @Inject constructor(
 
             _state.update { _state.value.copy(isLoading = true, isError = false, errorMessage = "") }
 
-            verificationDataSource
+            verificationService
                 .verifyPhoneNumber(
                     context = context,
                     phoneNumber = phoneNumber
@@ -55,10 +53,12 @@ class VerificationViewModel @Inject constructor(
 
             _state.update { _state.value.copy(isLoading = true, isError = false, errorMessage = "") }
 
-            val credential = verificationDataSource.getCredential(verificationId, token)
-            verificationDataSource
-                .signIn(credential)
-                .either(::handleSignInError, ::handleSingInSuccess)
+            verificationService
+                .signIn(verificationId, token)
+                .fold(
+                    onSuccess = { handleSingInSuccess() },
+                    onFailure = ::handleSignInError
+                )
         }
     }
 
@@ -68,11 +68,10 @@ class VerificationViewModel @Inject constructor(
 
             _state.update { _state.value.copy(isLoading = true, isError = false, errorMessage = "") }
 
-            verificationDataSource
-                .verifyPhoneNumber(
+            verificationService
+                .resendToken(
                     context = context,
-                    phoneNumber = phoneNumber,
-                    token = resendToken
+                    phoneNumber = phoneNumber
                 )
                 .collectLatest(::handleVerificationState)
         }
@@ -89,9 +88,9 @@ class VerificationViewModel @Inject constructor(
 
             authenticationRepository
                 .updateName("$firstName $lastName")
-                .either(
-                    ::handleNameError,
-                    ::handleNameSuccess
+                .fold(
+                    onSuccess = { handleNameSuccess() },
+                    onFailure = ::handleNameError
                 )
         }
     }
@@ -100,12 +99,9 @@ class VerificationViewModel @Inject constructor(
         when(state) {
             is CodeSent -> {
                 verificationId = state.verificationId
-                resendToken = state.token
                 _state.update { _state.value.copy(isCodeSent = true, isLoading = false) }
             }
-            is VerificationCompleted -> verificationDataSource
-                .signIn(state.credential)
-                .either(::handleSignInError, ::handleSingInSuccess)
+            is VerificationCompleted -> handleSingInSuccess()
             is VerificationFailed -> _state.update { _state.value.copy(isLoading = false, isError = true, errorMessage = state.exception.message ?: "") }
         }
     }
@@ -119,21 +115,21 @@ class VerificationViewModel @Inject constructor(
         }
     }
 
-    private suspend fun handleSignInError(exception: Exception) {
+    private fun handleSignInError(exception: Throwable) {
 
         _state.update {
             _state.value.copy(isLoading = false, isError = true, errorMessage = exception.message ?: "")
         }
     }
 
-    private suspend fun handleNameSuccess() {
+    private fun handleNameSuccess() {
 
         _state.update {
             _state.value.copy(isNameProvided = true, isLoading = false)
         }
     }
 
-    private suspend fun handleNameError(exception: Exception) {
+    private fun handleNameError(exception: Throwable) {
 
         _state.update {
             _state.value.copy(isLoading = false, isError = true, errorMessage = exception.message ?: "")

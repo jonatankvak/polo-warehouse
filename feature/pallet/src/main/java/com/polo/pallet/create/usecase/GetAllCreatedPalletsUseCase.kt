@@ -1,9 +1,8 @@
 package com.polo.pallet.create.usecase
 
-import com.polo.core_ui.model.UiPallet
-import com.polo.core_ui.model.UiProduct
-import com.polo.core_ui.model.UiWarehouse
-import com.polo.domain.functional.Either
+import com.polo.ui.model.UiPallet
+import com.polo.ui.model.UiProduct
+import com.polo.ui.model.UiWarehouse
 import com.polo.domain.model.Pallet
 import com.polo.domain.model.PalletStatus.CREATED
 import com.polo.domain.repository.PalletRepository
@@ -23,19 +22,14 @@ class GetAllCreatedPalletsUseCase @Inject constructor(
     suspend operator fun invoke(
         products: List<UiProduct>,
         warehouses: List<UiWarehouse>
-    ): Flow<Either<Exception, List<UiPallet>>> {
+    ): Flow<Result<List<UiPallet>>> {
         return withContext(Dispatchers.IO) {
             palletRepository.observePallets(CREATED)
-                .map { response ->
-                    when(response) {
-                        is Either.Result -> Either.Result(response.data.map { map(it, products, warehouses) })
-                        is Either.Error -> response
-                    }
-                }
+                .map { response -> response.map { pallets -> pallets.map { mapToUi(it, products, warehouses) } } }
         }
     }
 
-    private fun map(
+    private fun mapToUi(
         pallet: Pallet,
         products: List<UiProduct>,
         warehouses: List<UiWarehouse>

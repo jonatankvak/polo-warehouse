@@ -2,7 +2,6 @@ package com.polo.dashboard.usecase
 
 import com.polo.dashboard.viewmodel.PalletListUiModel.PalletListUiBody
 import com.polo.dashboard.viewmodel.PalletListUiModel.PalletListUiHeader
-import com.polo.domain.functional.Either
 import com.polo.domain.model.Pallet
 import com.polo.domain.model.PalletStatus.READY
 import com.polo.domain.model.Product
@@ -21,30 +20,19 @@ class GetReadyPalletsUseCase @Inject constructor(
     suspend operator fun invoke(
         products: List<Product>,
         warehouses: List<Warehouse>
-    ): Flow<Either<Exception, Map<PalletListUiHeader, List<PalletListUiBody>>>> {
+    ): Flow<Result<Map<PalletListUiHeader, List<PalletListUiBody>>>> {
         return withContext(Dispatchers.IO) {
             palletRepository.observePallets(READY)
-                .map {
-                    map(it, warehouses, products)
+                .map { result ->
+                    result.mapCatching { pallets ->
+                        createPalletListUiModel(
+                            pallets,
+                            warehouses,
+                            products
+                        )
+                    }
                 }
         }
-    }
-
-    private fun map(
-        response: Either<Exception, List<Pallet>>,
-        warehouses: List<Warehouse>,
-        products: List<Product>
-    ): Either<Exception, Map<PalletListUiHeader, List<PalletListUiBody>>> {
-
-        if (response.isError) return response as Either.Error
-
-        return Either.Result(
-                createPalletListUiModel(
-                response.result(),
-                warehouses,
-                products
-            )
-        )
     }
 
     private fun createPalletListUiModel(

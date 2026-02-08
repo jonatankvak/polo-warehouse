@@ -2,8 +2,7 @@ package com.polo.pallet.read.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.polo.core_ui.model.UiPallet
-import com.polo.domain.functional.Either
+import com.polo.ui.model.UiPallet
 import com.polo.domain.model.PalletStatus.CREATED
 import com.polo.domain.model.PalletStatus.READY
 import com.polo.domain.model.PalletStatus.TRANSPORT
@@ -38,47 +37,34 @@ class ReadPalletViewModel @Inject constructor(
 
             _state.update { current -> current.copy(isLoading = true) }
 
-            when (val palletResult = palletRepository.getPallet(palletUid)) {
-                is Either.Error -> {
-                    _state.update { current -> current.copy(
-                            isLoading = false,
-                            isError = triggered
-                        )
-                    }
-                }
-                is Either.Result -> {
-                    val pallet = palletResult.data
-                    when (val productResult = productRepository.getProduct(pallet.productUid)) {
-                        is Either.Error -> _state.update { current -> current.copy(
-                                isLoading = false,
-                                isError = triggered
-                            )
-                        }
-                        is Either.Result -> {
-                            when (val warehouseResult = warehouseRepository.getWarehouse(pallet.warehouseUid)) {
-                                is Either.Error -> _state.update { current -> current.copy(
-                                        isLoading = false,
-                                        isError = triggered
-                                    )
-                                }
-                                is Either.Result -> _state.update { current -> current.copy(
-                                        isLoading = false,
-                                        pallet = UiPallet(
-                                            uid = pallet.uid,
-                                            date = java.time.Instant.ofEpochMilli(pallet.dateEpochMillis).toString(),
-                                            productName = productResult.data.name,
-                                            productAmount = pallet.productAmount,
-                                            createdBy = pallet.createdBy,
-                                            warehouseUid = pallet.warehouseUid,
-                                            warehouseName = warehouseResult.data.name,
-                                            status = pallet.status
-                                        )
-                                    )
-                                }
-                            }
-                        }
-                    }
-                }
+            val pallet = palletRepository.getPallet(palletUid).getOrElse {
+                _state.update { current -> current.copy(isLoading = false, isError = triggered) }
+                return@launch
+            }
+
+            val product = productRepository.getProduct(pallet.productUid).getOrElse {
+                _state.update { current -> current.copy(isLoading = false, isError = triggered) }
+                return@launch
+            }
+
+            val warehouse = warehouseRepository.getWarehouse(pallet.warehouseUid).getOrElse {
+                _state.update { current -> current.copy(isLoading = false, isError = triggered) }
+                return@launch
+            }
+
+            _state.update { current -> current.copy(
+                    isLoading = false,
+                    pallet = UiPallet(
+                        uid = pallet.uid,
+                        date = java.time.Instant.ofEpochMilli(pallet.dateEpochMillis).toString(),
+                        productName = product.name,
+                        productAmount = pallet.productAmount,
+                        createdBy = pallet.createdBy,
+                        warehouseUid = pallet.warehouseUid,
+                        warehouseName = warehouse.name,
+                        status = pallet.status
+                    )
+                )
             }
         }
     }
@@ -94,9 +80,9 @@ class ReadPalletViewModel @Inject constructor(
 
             if (_state.value.isFinalDestination) {
                 palletRepository.deletePallet(currentPallet.uid)
-                    .onResult {
+                    .onSuccess {
                         _state.update { current -> current.copy(isLoading = false, isDissolved = true) }
-                    }.onError {
+                    }.onFailure {
                         _state.update { current -> current.copy(isLoading = false) }
                     }
                 return@launch
@@ -109,9 +95,9 @@ class ReadPalletViewModel @Inject constructor(
             }
 
             palletRepository.updateStatus(currentPallet.uid, toStatus, toWarehouse)
-                .onResult {
+                .onSuccess {
                     _state.update { current -> current.copy(isLoading = false) }
-                }.onError {
+                }.onFailure {
                     _state.update { current -> current.copy(isLoading = false) }
                 }
 

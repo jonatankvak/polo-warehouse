@@ -8,39 +8,22 @@ import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
+import com.polo.authentication.api.navigation.AuthenticationDestination
 import com.polo.authentication.view.VerificationRoute
-import com.polo.core_ui.model.ScanningPallet
+import com.polo.dashboard.api.navigation.DashboardDestination
 import com.polo.dashboard.view.DashboardRoute
+import com.polo.pallet.api.navigation.CreatePalletDestination
+import com.polo.pallet.api.navigation.ReadPalletDestination
 import com.polo.pallet.create.view.CreatePalletRoute
 import com.polo.pallet.read.view.ReadPalletRoute
+import com.polo.scanner.api.navigation.EditPalletScannerDestination
+import com.polo.scanner.api.navigation.VerifyScannerDestination
 import com.polo.scanner.read.ScanPalletRoute
 import com.polo.scanner.verify.view.VerifyPalletScannerRoute
-import kotlinx.serialization.Serializable
-
-@Serializable
-sealed interface AppDestination : NavKey
-
-@Serializable
-data object AuthenticationDestination : AppDestination
-
-@Serializable
-data object DashboardDestination : AppDestination
-
-@Serializable
-data object CreatePalletDestination : AppDestination
-
-@Serializable
-data object EditPalletScannerDestination : AppDestination
-
-@Serializable
-data class VerifyScannerDestination(val pallet: ScanningPallet) : AppDestination
-
-@Serializable
-data class ReadPalletDestination(val palletUid: String) : AppDestination
 
 @Composable
 fun PoloWarehouseNavHost(
-    startDestination: AppDestination
+    startDestination: NavKey
 ) {
     val backStack = rememberNavBackStack(startDestination)
 

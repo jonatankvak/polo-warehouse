@@ -1,14 +1,12 @@
 package com.polo.domain.repository
 
-import com.polo.domain.functional.Either
-
 interface AuthenticationRepository {
 
     fun isSignedIn(): Boolean
 
     fun getUid(): String
 
-    suspend fun updateName(name: String): Either<Exception, Unit>
+    suspend fun updateName(name: String): Result<Unit>
 
     fun getName(): String
 }

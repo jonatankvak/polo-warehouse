@@ -27,9 +27,9 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import com.polo.core_ui.PalletCardBodyUi
-import com.polo.core_ui.PalletCardTitleUi
-import com.polo.core_ui.SlideToUnlock
+import com.polo.ui.PalletCardBodyUi
+import com.polo.ui.PalletCardTitleUi
+import com.polo.ui.SlideToUnlock
 import com.polo.domain.model.PalletStatus
 import com.polo.domain.model.PalletStatus.CREATED
 import com.polo.domain.model.PalletStatus.READY

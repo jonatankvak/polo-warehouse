@@ -1,7 +1,6 @@
 package com.polo.scanner.verify.viewmodel
 
-import com.polo.core_ui.model.UiPallet
-import com.polo.domain.functional.Either
+import com.polo.ui.model.UiPallet
 import com.polo.domain.model.CreatePallet
 import com.polo.domain.model.Pallet
 import com.polo.domain.model.PalletStatus
@@ -43,11 +42,11 @@ class VerifyPalletScannerViewModelTest {
     private class FakePalletRepository : PalletRepository {
         var updateCalled = false
 
-        override suspend fun observePallets(status: PalletStatus): Flow<Either<Exception, List<Pallet>>> {
+        override suspend fun observePallets(status: PalletStatus): Flow<Result<List<Pallet>>> {
             throw UnsupportedOperationException()
         }
 
-        override suspend fun getPallet(palletUid: String): Either<Exception, Pallet> {
+        override suspend fun getPallet(palletUid: String): Result<Pallet> {
             throw UnsupportedOperationException()
         }
 
@@ -55,16 +54,16 @@ class VerifyPalletScannerViewModelTest {
             palletUid: String,
             status: PalletStatus,
             warehouseUid: String?
-        ): Either<Exception, Unit> {
+        ): Result<Unit> {
             updateCalled = true
-            return Either.Result(Unit)
+            return Result.success(Unit)
         }
 
-        override suspend fun createPallet(pallet: CreatePallet): Either<Exception, Unit> {
+        override suspend fun createPallet(pallet: CreatePallet): Result<Unit> {
             throw UnsupportedOperationException()
         }
 
-        override suspend fun deletePallet(palletUid: String): Either<Exception, Unit> {
+        override suspend fun deletePallet(palletUid: String): Result<Unit> {
             throw UnsupportedOperationException()
         }
     }

@@ -32,10 +32,10 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.polo.core_ui.TextFieldDropDownUi
-import com.polo.core_ui.model.UiPallet
-import com.polo.core_ui.model.UiProduct
-import com.polo.core_ui.model.UiWarehouse
+import com.polo.ui.TextFieldDropDownUi
+import com.polo.ui.model.UiPallet
+import com.polo.ui.model.UiProduct
+import com.polo.ui.model.UiWarehouse
 import com.polo.pallet.R
 import com.polo.pallet.create.viewmodel.CreatePalletViewModel.UiState
 import kotlinx.coroutines.delay

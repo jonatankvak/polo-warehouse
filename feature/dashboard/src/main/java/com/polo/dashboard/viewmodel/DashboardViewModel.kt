@@ -45,9 +45,9 @@ class DashboardViewModel @Inject constructor(
 
             getPalletsUseCase(loadedProducts, loadedWarehouses)
                 .collectLatest { response ->
-                    response.either(
-                        ::handleError,
-                        ::handleResponse
+                    response.fold(
+                        onSuccess = ::handleResponse,
+                        onFailure = ::handleError
                     )
                 }
         }
@@ -63,7 +63,7 @@ class DashboardViewModel @Inject constructor(
         }
     }
 
-    private suspend fun handleError(exception: Exception) {
+    private fun handleError(exception: Throwable) {
 
         _state.update { current ->
             current.copy(
@@ -78,8 +78,8 @@ class DashboardViewModel @Inject constructor(
         val productsResult = productRepository.getAllProducts()
         val warehousesResult = warehouseRepository.getAllWarehouses()
 
-        productsResult.onResult { loadedProducts = it }
-        warehousesResult.onResult { loadedWarehouses = it }
+        productsResult.onSuccess { loadedProducts = it }
+        warehousesResult.onSuccess { loadedWarehouses = it }
     }
 
     private fun getName(): String {

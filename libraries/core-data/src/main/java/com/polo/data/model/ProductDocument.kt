@@ -8,6 +8,6 @@ data class ProductDocument(
     val idNumber: Int = -1,
     val name: String = "",
     val barCode: Long = -1,
-    val price: Float = -1f,
+    val price: Float? = null,
     val transportPackage: String = ""
 )

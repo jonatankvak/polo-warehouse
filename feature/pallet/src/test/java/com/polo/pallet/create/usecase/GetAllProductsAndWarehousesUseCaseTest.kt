@@ -1,6 +1,5 @@
 package com.polo.pallet.create.usecase
 
-import com.polo.domain.functional.Either
 import com.polo.domain.model.Product
 import com.polo.domain.model.Warehouse
 import com.polo.domain.repository.ProductRepository
@@ -38,8 +37,8 @@ class GetAllProductsAndWarehousesUseCaseTest {
 
         val result = useCase()
 
-        assertTrue(result is Either.Result)
-        val (uiProducts, uiWarehouses) = (result as Either.Result).data
+        assertTrue(result.isSuccess)
+        val (uiProducts, uiWarehouses) = result.getOrThrow()
         assertEquals(1, uiProducts.size)
         assertEquals("Widget", uiProducts.first().name)
         assertEquals(1, uiWarehouses.size)
@@ -49,15 +48,15 @@ class GetAllProductsAndWarehousesUseCaseTest {
     private class FakeProductRepository(
         private val products: List<Product>
     ) : ProductRepository {
-        override suspend fun getAllProducts(): Either<Exception, List<Product>> = Either.Result(products)
-        override suspend fun getProduct(productUid: String): Either<Exception, Product> = throw UnsupportedOperationException()
-        override suspend fun queryProductsByName(query: String): Either<Exception, List<Product>> = throw UnsupportedOperationException()
+        override suspend fun getAllProducts(): Result<List<Product>> = Result.success(products)
+        override suspend fun getProduct(productUid: String): Result<Product> = throw UnsupportedOperationException()
+        override suspend fun queryProductsByName(query: String): Result<List<Product>> = throw UnsupportedOperationException()
     }
 
     private class FakeWarehouseRepository(
         private val warehouses: List<Warehouse>
     ) : WarehouseRepository {
-        override suspend fun getAllWarehouses(): Either<Exception, List<Warehouse>> = Either.Result(warehouses)
-        override suspend fun getWarehouse(warehouseUid: String): Either<Exception, Warehouse> = throw UnsupportedOperationException()
+        override suspend fun getAllWarehouses(): Result<List<Warehouse>> = Result.success(warehouses)
+        override suspend fun getWarehouse(warehouseUid: String): Result<Warehouse> = throw UnsupportedOperationException()
     }
 }

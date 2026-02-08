@@ -36,6 +36,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
@@ -51,7 +52,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.polo.authentication.R
 import com.polo.authentication.viewmodel.VerificationViewModel
 import com.polo.authentication.viewmodel.VerificationViewModel.UiState
-import com.polo.core_ui.OtpTextField
+import com.polo.ui.OtpTextField
 
 @Composable
 fun VerificationRoute(
@@ -127,16 +128,17 @@ fun HeaderUi() {
             Image(
                 modifier = Modifier
                     .background(
-                        color = Color(0xFFFFC72C),
+                        color = MaterialTheme.colorScheme.primaryContainer,
                         shape = CircleShape
                     )
                     .size(160.dp)
                     .padding(8.dp),
-                imageVector = ImageVector.vectorResource(id = com.polo.core.R.drawable.ic_brand),
+                imageVector = ImageVector.vectorResource(id = com.polo.designsystem.R.drawable.ic_brand),
+                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onPrimaryContainer),
                 contentDescription = null
             )
             Text(
-                text = stringResource(id = com.polo.core.R.string.app_name_title),
+                text = stringResource(id = com.polo.designsystem.R.string.app_name_title),
                 style = MaterialTheme.typography.headlineLarge
             )
         }

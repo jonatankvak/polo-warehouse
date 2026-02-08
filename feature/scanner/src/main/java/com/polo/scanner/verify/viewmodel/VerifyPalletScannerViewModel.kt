@@ -2,7 +2,7 @@ package com.polo.scanner.verify.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.polo.core_ui.model.UiPallet
+import com.polo.ui.model.UiPallet
 import com.polo.domain.model.PalletStatus.READY
 import com.polo.domain.repository.PalletRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -41,9 +41,9 @@ class VerifyPalletScannerViewModel @Inject constructor(
             palletRepository.updateStatus(
                 palletUid = pallet.uid,
                 status = READY
-            ).onResult {
+            ).onSuccess {
                 _state.update { current -> current.copy(isPalletStatusUpdated = triggered, isLoading = false) }
-            }.onError {
+            }.onFailure {
                 _state.update { current -> current.copy(isError = triggered(it.message), isLoading = false) }
             }
         }

@@ -17,6 +17,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -40,8 +41,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import com.polo.core.R.drawable
-import com.polo.core_ui.ExpandableContent
+import com.polo.designsystem.R.drawable
+import com.polo.ui.ExpandableContent
 import com.polo.dashboard.R
 import com.polo.dashboard.viewmodel.DashboardViewModel
 import com.polo.dashboard.viewmodel.DashboardViewModel.UiState
@@ -240,6 +241,10 @@ fun DashboardPalletItemUi(
     )
 ) {
     Card(
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceContainer,
+            contentColor = MaterialTheme.colorScheme.onSurface,
+        ),
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 8.dp)

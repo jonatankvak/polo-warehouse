@@ -1,82 +1,22 @@
 plugins {
-    alias(libs.plugins.android.application)
+    id("polo.android.application.compose")
     alias(libs.plugins.google.services)
     alias(libs.plugins.firebase.crashlytics)
     alias(libs.plugins.kotlin.parcelize)
     alias(libs.plugins.hilt)
     alias(libs.plugins.ktlint)
-    alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.ksp)
 }
 
 android {
     namespace = "com.polo.warehouse"
-    compileSdk = libs.versions.compileSdk.get().toInt()
 
     defaultConfig {
         applicationId = "com.polo.warehouse"
-        minSdk = libs.versions.minSdk.get().toInt()
-        targetSdk = libs.versions.targetSdk.get().toInt()
         versionCode = 1
         versionName = "1.0"
-
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        vectorDrawables {
-            useSupportLibrary = true
-        }
     }
-
-    buildTypes {
-        getByName("debug") {
-            applicationIdSuffix = ".debug"
-            isDebuggable = true
-            resValue("string", "app_name", "W-Debug")
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
-        }
-
-        create("staging") {
-            applicationIdSuffix = ".alpha"
-            resValue("string", "app_name", "W-Alpha")
-            isMinifyEnabled = false
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
-        }
-
-        getByName("release") {
-            resValue("string", "app_name", "Warehouse")
-            isMinifyEnabled = false
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
-        }
-    }
-
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
-    }
-
-    buildFeatures {
-        compose = true
-        resValues = true
-    }
-
-    packaging {
-        resources {
-            excludes += "/META-INF/{AL2.0,LGPL2.1}"
-        }
-    }
-}
-
-kotlin {
-    jvmToolchain(17)
 }
 
 dependencies {
@@ -122,12 +62,17 @@ dependencies {
     implementation(libs.navigation3.ui)
     implementation(libs.lifecycle.viewmodel.navigation3)
 
-    implementation(project(":libraries:core"))
-    implementation(project(":libraries:core-data"))
-    implementation(project(":libraries:core-ui"))
-    implementation(project(":libraries:domain"))
-    implementation(project(":feature:authentication"))
-    implementation(project(":feature:dashboard"))
-    implementation(project(":feature:pallet"))
-    implementation(project(":feature:scanner"))
+    implementation(project(":core:designsystem"))
+    implementation(project(":core:data"))
+    implementation(project(":core:firebase"))
+    implementation(project(":core:ui"))
+    implementation(project(":core:domain"))
+    implementation(project(":feature:authentication:api"))
+    implementation(project(":feature:authentication:impl"))
+    implementation(project(":feature:dashboard:api"))
+    implementation(project(":feature:dashboard:impl"))
+    implementation(project(":feature:pallet:api"))
+    implementation(project(":feature:pallet:impl"))
+    implementation(project(":feature:scanner:api"))
+    implementation(project(":feature:scanner:impl"))
 }

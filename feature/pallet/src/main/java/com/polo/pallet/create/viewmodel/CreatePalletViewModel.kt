@@ -3,9 +3,9 @@ package com.polo.pallet.create.viewmodel
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.polo.core_ui.model.UiPallet
-import com.polo.core_ui.model.UiProduct
-import com.polo.core_ui.model.UiWarehouse
+import com.polo.ui.model.UiPallet
+import com.polo.ui.model.UiProduct
+import com.polo.ui.model.UiWarehouse
 import com.polo.domain.model.CreatePallet
 import com.polo.domain.repository.AuthenticationRepository
 import com.polo.domain.repository.PalletRepository
@@ -39,7 +39,7 @@ class CreatePalletViewModel @Inject constructor(
 
         viewModelScope.launch(Dispatchers.IO) {
             getAllProductsAndWarehousesUseCase()
-                .onResult { pair ->
+                .onSuccess { pair ->
 
                     _state.update { current -> current.copy(
                             products = pair.first,
@@ -55,7 +55,7 @@ class CreatePalletViewModel @Inject constructor(
                         )
                     }
 
-                }.onError { exception ->
+                }.onFailure { exception ->
                     _state.update { current -> current.copy(isLoading = false, isError = triggered(exception.message)) }
                     Log.e("FIRESTORE_APP", exception.message, exception)
                 }
@@ -79,9 +79,9 @@ class CreatePalletViewModel @Inject constructor(
                     productAmount = amount,
                     createdBy = authenticationRepository.getName()
                 )
-            ).onResult {
+            ).onSuccess {
                 _state.update { current -> current.copy(isLoading = false, isPalletCreated = triggered) }
-            }.onError { exception ->
+            }.onFailure { exception ->
                 _state.update { current -> current.copy(isLoading = false, isError = triggered(exception.message)) }
                 Log.e("FIRESTORE_APP", exception.message, exception)
             }
@@ -97,9 +97,9 @@ class CreatePalletViewModel @Inject constructor(
             _state.update { current -> current.copy(isLoading = true) }
 
             palletRepository.deletePallet(pallet.uid)
-                .onResult {
+                .onSuccess {
                     _state.update { current -> current.copy(isLoading = false) }
-                }.onError { exception ->
+                }.onFailure { exception ->
                     _state.update { current -> current.copy(isLoading = false, isError = triggered(exception.message)) }
                     Log.e("FIRESTORE_APP", exception.message, exception)
                 }
@@ -119,9 +119,9 @@ class CreatePalletViewModel @Inject constructor(
                 products,
                 warehouses
             ).collectLatest { response ->
-                response.onResult { pallets ->
+                response.onSuccess { pallets ->
                     _state.update { current -> current.copy(pallets = pallets, isLoading = false) }
-                }.onError { exception ->
+                }.onFailure { exception ->
                     _state.update { current -> current.copy(isLoading = false, isError = triggered(exception.message)) }
                     Log.e("FIRESTORE_APP", exception.message, exception)
                 }

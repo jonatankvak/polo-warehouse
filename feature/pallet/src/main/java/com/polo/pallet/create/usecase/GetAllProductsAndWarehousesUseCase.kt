@@ -1,8 +1,7 @@
 package com.polo.pallet.create.usecase
 
-import com.polo.core_ui.model.UiProduct
-import com.polo.core_ui.model.UiWarehouse
-import com.polo.domain.functional.Either
+import com.polo.ui.model.UiProduct
+import com.polo.ui.model.UiWarehouse
 import com.polo.domain.model.Product
 import com.polo.domain.model.Warehouse
 import com.polo.domain.repository.ProductRepository
@@ -16,7 +15,7 @@ class GetAllProductsAndWarehousesUseCase @Inject constructor(
     private val warehouseRepository: WarehouseRepository
 ) {
 
-    suspend operator fun invoke(): Either<Exception, Pair<List<UiProduct>, List<UiWarehouse>>> {
+    suspend operator fun invoke(): Result<Pair<List<UiProduct>, List<UiWarehouse>>> {
         return coroutineScope {
             val productsDeferred = async { productRepository.getAllProducts() }
             val warehousesDeferred = async { warehouseRepository.getAllWarehouses() }
@@ -24,20 +23,19 @@ class GetAllProductsAndWarehousesUseCase @Inject constructor(
             val productsResult = productsDeferred.await()
             val warehousesResult = warehousesDeferred.await()
 
-            when {
-                productsResult is Either.Error -> Either.Error(productsResult.data)
-                warehousesResult is Either.Error -> Either.Error(warehousesResult.data)
-                else -> {
-                    val products = (productsResult as Either.Result).data
-                    val warehouses = (warehousesResult as Either.Result).data
-                    Either.Result(
+            productsResult.fold(
+                onSuccess = { products ->
+                    warehousesResult.map { warehouses ->
                         Pair(
                             first = products.map { it.toUi() },
                             second = warehouses.map { it.toUi() }
                         )
-                    )
+                    }
+                },
+                onFailure = { throwable ->
+                    Result.failure(throwable)
                 }
-            }
+            )
         }
     }
 

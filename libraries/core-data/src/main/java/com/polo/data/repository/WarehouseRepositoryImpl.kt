@@ -1,28 +1,21 @@
 package com.polo.data.repository
 
-import com.polo.data.datasource.IFireStoreDataSource
+import com.polo.data.datasource.FirestoreDataSource
 import com.polo.data.model.WarehouseDocument
-import com.polo.domain.functional.Either
 import com.polo.domain.model.Warehouse
 import com.polo.domain.repository.WarehouseRepository
 import javax.inject.Inject
 
 class WarehouseRepositoryImpl @Inject constructor(
-    private val firestoreDataSource: IFireStoreDataSource
+    private val firestoreDataSource: FirestoreDataSource
 ) : WarehouseRepository {
 
-    override suspend fun getAllWarehouses(): Either<Exception, List<Warehouse>> {
-        return when (val response = firestoreDataSource.getAllWarehouses()) {
-            is Either.Result -> Either.Result(response.data.map { it.toDomain() })
-            is Either.Error -> Either.Error(response.data)
-        }
+    override suspend fun getAllWarehouses(): Result<List<Warehouse>> {
+        return firestoreDataSource.getAllWarehouses().map { warehouseDocuments -> warehouseDocuments.map { it.toDomain() } }
     }
 
-    override suspend fun getWarehouse(warehouseUid: String): Either<Exception, Warehouse> {
-        return when (val response = firestoreDataSource.getWarehouse(warehouseUid)) {
-            is Either.Result -> Either.Result(response.data.toDomain())
-            is Either.Error -> Either.Error(response.data)
-        }
+    override suspend fun getWarehouse(warehouseUid: String): Result<Warehouse> {
+        return firestoreDataSource.getWarehouse(warehouseUid).map { it.toDomain() }
     }
 
     private fun WarehouseDocument.toDomain(): Warehouse {

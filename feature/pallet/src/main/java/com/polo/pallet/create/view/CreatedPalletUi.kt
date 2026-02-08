@@ -29,8 +29,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.polo.core_ui.PalletCardUi
-import com.polo.core_ui.model.UiPallet
+import com.polo.ui.PalletCardUi
+import com.polo.ui.model.UiPallet
 import com.polo.pallet.R
 import com.polo.pallet.create.viewmodel.CreatePalletViewModel.UiState
 import com.valentinilk.shimmer.shimmer
