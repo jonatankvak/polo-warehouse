@@ -20,12 +20,12 @@ rootProject.name = "Polo Warehouse"
 
 include(
     ":app",
-    ":core:common",
     ":core:model",
     ":core:designsystem",
     ":core:domain",
     ":core:data",
     ":core:firebase",
+    ":core:verification",
     ":feature:authentication:api",
     ":feature:authentication:impl",
     ":feature:dashboard:api",
@@ -37,10 +37,6 @@ include(
     ":core:ui"
 )
 
-project(":core:designsystem").projectDir = file("libraries/core")
-project(":core:domain").projectDir = file("libraries/domain")
-project(":core:data").projectDir = file("libraries/core-data")
-project(":core:ui").projectDir = file("libraries/core-ui")
 project(":core").projectDir = file("core")
 project(":feature:authentication").projectDir = file("feature/authentication-parent")
 project(":feature:dashboard").projectDir = file("feature/dashboard-parent")

@@ -39,6 +39,17 @@ val verifyModuleBoundaries = tasks.register("verifyModuleBoundaries") {
                         violations += "$sourcePath must not depend on $targetPath directly"
                     }
 
+                    if (sourcePath.endsWith(":api") && targetPath == ":core:data") {
+                        violations += "$sourcePath API module must not depend on $targetPath directly"
+                    }
+
+                    if (sourcePath.startsWith(":feature:") &&
+                        !sourcePath.endsWith(":api") &&
+                        targetPath == ":core:data"
+                    ) {
+                        violations += "$sourcePath must not depend on $targetPath directly"
+                    }
+
                     if (sourcePath.endsWith(":api") &&
                         targetPath.startsWith(":feature:") &&
                         targetPath != sourcePath
