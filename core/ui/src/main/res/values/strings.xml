@@ -7,4 +7,8 @@
     <string name="pallet_date">Date</string>
     <string name="pallet_warehouse">Warehouse</string>
     <string name="pallet_res_person">Responsible person</string>
+    <string name="verify_by_scan">Verify by QR</string>
+    <string name="nav_dashboard">Dashboard</string>
+    <string name="nav_create">Create</string>
+    <string name="nav_scan">Scan</string>
 </resources>

@@ -1,20 +1,19 @@
 package com.polo.pallet.read.view
 
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.focusable
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -23,19 +22,17 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import com.polo.domain.model.PalletStatus.CREATED
+import com.polo.domain.model.PalletStatus.TRANSPORT
+import com.polo.pallet.R
+import com.polo.pallet.read.viewmodel.ReadPalletViewModel
+import com.polo.pallet.read.viewmodel.ReadPalletViewModel.UiState
 import com.polo.ui.PalletCardBodyUi
 import com.polo.ui.PalletCardTitleUi
 import com.polo.ui.SlideToUnlock
-import com.polo.domain.model.PalletStatus
-import com.polo.domain.model.PalletStatus.CREATED
-import com.polo.domain.model.PalletStatus.READY
-import com.polo.domain.model.PalletStatus.TRANSPORT
-import com.polo.pallet.read.viewmodel.ReadPalletViewModel
-import com.polo.pallet.read.viewmodel.ReadPalletViewModel.UiState
+import com.polo.ui.YnTopAppBar
 import de.palm.composestateevents.EventEffect
 import kotlinx.coroutines.launch
 
@@ -87,6 +84,12 @@ fun ReadPalletScreen(
     }
 
     Scaffold(
+        topBar = {
+            YnTopAppBar(
+                title = stringResource(id = R.string.pallet_detail_title),
+                onBack = onBack
+            )
+        },
         snackbarHost = {
             SnackbarHost(hostState = snackbarHostState)
         }
@@ -94,6 +97,8 @@ fun ReadPalletScreen(
         Column(
             modifier = Modifier
                 .padding(contentPadding)
+                .consumeWindowInsets(contentPadding)
+                .background(MaterialTheme.colorScheme.surfaceVariant)
                 .fillMaxSize(),
             verticalArrangement = Arrangement.SpaceBetween
         ) {
@@ -107,11 +112,17 @@ fun ReadPalletScreen(
                 }
 
                 Column(
-                    modifier = Modifier.padding(16.dp)
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
+                        .background(
+                            color = MaterialTheme.colorScheme.surface,
+                            shape = RoundedCornerShape(16.dp)
+                        )
+                        .padding(16.dp)
                 ) {
                     PalletCardTitleUi(it)
                     PalletCardBodyUi(it)
-                    PalletStatusUi(it.status)
                 }
 
                 Column(
@@ -127,27 +138,4 @@ fun ReadPalletScreen(
             }
         }
     }
-}
-
-@Preview
-@Composable
-fun PalletStatusUi(
-    palletStatus: PalletStatus = READY
-) {
-    OutlinedTextField(
-        modifier = Modifier
-            .fillMaxWidth()
-            .focusable(false)
-            .clickable(false, onClick = {}),
-        shape = OutlinedTextFieldDefaults.shape,
-        readOnly = true,
-        value = palletStatus.name,
-        onValueChange = { },
-        label = {
-            Text(
-                text = stringResource(id = com.polo.ui.R.string.pallet_status),
-                overflow = TextOverflow.Visible
-            )
-        }
-    )
 }

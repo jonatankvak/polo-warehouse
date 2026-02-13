@@ -3,10 +3,23 @@
     <string name="verify_btn">Verify</string>
     <string name="confirm_btn">Confirm</string>
     <string name="resend_token_btn">Resend</string>
+    <string name="resend_code_btn">Resend code</string>
+    <string name="welcome_title">Welcome to Ynventory</string>
+    <string name="verify_code_title">Verify Code</string>
+    <string name="complete_profile_title">Complete Profile</string>
     <string name="enter_phone_number">Enter phone number</string>
+    <string name="sign_in_phone_title">Sign in with phone</string>
+    <string name="sign_in_phone_subtitle">Enter your phone number to receive a verification code</string>
+    <string name="phone_number_label">Phone Number</string>
     <string name="enter_name">Enter your name</string>
+    <string name="whats_your_name_title">What\'s your name?</string>
+    <string name="whats_your_name_subtitle">Help us personalize your experience</string>
+    <string name="first_name_label">First Name</string>
+    <string name="last_name_label">Last Name</string>
     <string name="first_name">First name</string>
     <string name="last_name">Last name</string>
     <string name="country_prefix" translatable="false">+381</string>
     <string name="enter_token">Enter token</string>
+    <string name="enter_verification_code_title">Enter verification code</string>
+    <string name="verification_sent_to">We sent a 6-digit code to %1$s</string>
 </resources>

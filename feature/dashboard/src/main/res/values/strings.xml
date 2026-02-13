@@ -2,6 +2,12 @@
     <string name="dashboard_screen_title">Dashboard</string>
     <string name="dashboard_screen_subtitle">Welcome %s</string>
     <string name="dashboard_screen_pallet_section">Ready pallets</string>
+    <string name="dashboard_screen_pallet_section_subtitle">Pallets ready for transport, grouped by warehouse</string>
+    <string name="dashboard_screen_empty_title">No ready pallets</string>
+    <string name="dashboard_screen_empty_subtitle">Create and verify pallets to see them here</string>
+    <string name="dashboard_screen_products_count">%1$d products</string>
+    <string name="dashboard_screen_pallet_amount_line">Amount: %1$d</string>
+    <string name="dashboard_screen_pallet_count_line">Count: %1$d</string>
     <string name="dashboard_screen_pallet_name">Name</string>
     <string name="dashboard_screen_pallet_amount">Amount</string>
     <string name="dashboard_screen_pallet_count">Count</string>

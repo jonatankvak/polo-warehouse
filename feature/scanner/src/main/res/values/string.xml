@@ -2,5 +2,9 @@
 <resources>
     <string name="scan_error_message">Wrong pallet QR code!</string>
     <string name="scan_error_generic_message">Something went wrong!</string>
+    <string name="scan_pallet_title">Scan Pallet</string>
+    <string name="scan_pallet_subtitle">Point camera at pallet QR code</string>
     <string name="scan_verify_pallet">Verify pallet</string>
+    <string name="scan_verify_hint">Position pallet QR inside the frame</string>
+    <string name="scan_pallet_hint">Scan pallet QR code</string>
 </resources>

@@ -1,36 +1,30 @@
 package com.polo.ui
 
-import android.annotation.SuppressLint
-import androidx.compose.animation.core.FastOutSlowInEasing
-import androidx.compose.animation.core.MutableTransitionState
-import androidx.compose.animation.core.animateDp
-import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.core.rememberTransition
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import com.polo.designsystem.R.drawable
 
 const val EXPAND_ANIMATION_DURATION = 450
 
-@SuppressLint("UnusedTransitionTargetStateParameter")
 @Composable
 fun ExpandableCard(
     modifier: Modifier = Modifier,
@@ -40,67 +34,57 @@ fun ExpandableCard(
     bodyContent: @Composable () -> Unit = {},
     controlContent: @Composable () -> Unit = {}
 ) {
-    val transitionState = remember {
-        MutableTransitionState(expanded).apply {
-            targetState = !expanded
-        }
-    }
-
-    val transition = rememberTransition(transitionState, label = "transition")
-
-    val cardRoundedCorners by transition.animateDp({
-        tween(
-            durationMillis = EXPAND_ANIMATION_DURATION,
-            easing = FastOutSlowInEasing
-        )
-    }, label = "cornersTransition") {
-        if (expanded) 6.dp else 8.dp
-    }
-
-    val arrowRotationDegree by transition.animateFloat({
-        tween(durationMillis = EXPAND_ANIMATION_DURATION)
-    }, label = "arrowRotationDegree")
-    {
-        if (expanded) 180f else 0f
-    }
+    val arrowRotationDegree by animateFloatAsState(
+        targetValue = if (expanded) 180f else 0f,
+        animationSpec = tween(durationMillis = EXPAND_ANIMATION_DURATION),
+        label = "arrowRotationDegree"
+    )
 
     Card(
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceContainer,
+            containerColor = MaterialTheme.colorScheme.surface,
             contentColor = MaterialTheme.colorScheme.onSurface,
         ),
-        shape = RoundedCornerShape(cardRoundedCorners),
+        shape = RoundedCornerShape(16.dp),
         modifier = modifier
             .fillMaxWidth()
-            .padding(vertical = 16.dp)
+            .padding(vertical = 8.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 3.dp)
     ) {
-        Column(
-            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable { onExtended.invoke(expanded) }
+                .padding(start = 16.dp, top = 16.dp, end = 12.dp, bottom = 12.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-
-            titleContent()
-            ExpandableContent(visible = expanded) {
-                Column {
-                    bodyContent()
-                    controlContent()
-                }
+            Box(modifier = Modifier.weight(1f)) {
+                titleContent()
+            }
+            Box(
+                modifier = Modifier
+                    .background(
+                        color = MaterialTheme.colorScheme.surfaceVariant,
+                        shape = RoundedCornerShape(12.dp)
+                    )
+                    .padding(6.dp)
+            ) {
+                Icon(
+                    modifier = Modifier.rotate(arrowRotationDegree),
+                    imageVector = Icons.Default.ExpandMore,
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                    contentDescription = null
+                )
             }
         }
 
-        Box(
-            modifier = Modifier
-                .clickable { onExtended.invoke(expanded) }
-                .fillMaxWidth()
-                .height(32.dp),
-            contentAlignment = Alignment.Center
-        ) {
-            Icon(
-                modifier = Modifier.rotate(arrowRotationDegree),
-                painter = painterResource(
-                    id = drawable.ic_expand_more
-                ),
-                contentDescription = null
-            )
+        ExpandableContent(visible = expanded) {
+            Column(
+                modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
+            ) {
+                bodyContent()
+                controlContent()
+            }
         }
     }
 }

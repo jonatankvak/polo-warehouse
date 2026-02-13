@@ -1,10 +1,12 @@
 package com.polo.ui
 
 import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -16,6 +18,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
@@ -53,19 +56,27 @@ fun OtpTextField(
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.NumberPassword),
         decorationBox = {
             Column {
-                Row(horizontalArrangement = Arrangement.Center) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center
+                ) {
                     repeat(otpCount) { index ->
                         CharView(
                             index = index,
-                            text = otpText
+                            text = otpText,
+                            otpCount = otpCount
                         )
-                        Spacer(modifier = Modifier.width(8.dp))
+                        if (index < otpCount - 1) {
+                            Spacer(modifier = Modifier.width(2.dp))
+                        }
                     }
                 }
 
-                Spacer(modifier = Modifier.width(16.dp))
+                Spacer(modifier = Modifier.padding(top = 8.dp))
 
-                Text(text = errorMessage, color = MaterialTheme.colorScheme.error)
+                if (errorMessage.isNotBlank()) {
+                    Text(text = errorMessage, color = MaterialTheme.colorScheme.error)
+                }
             }
         }
     )
@@ -74,30 +85,37 @@ fun OtpTextField(
 @Composable
 private fun CharView(
     index: Int,
-    text: String
+    text: String,
+    otpCount: Int
 ) {
     val isFocused = text.length == index
     val char = when {
         index == text.length || index > text.length -> ""
         else -> text[index].toString()
     }
-    Text(
+    val shape = when(index) {
+        0 -> RoundedCornerShape(topStart = 10.dp, bottomStart = 10.dp, topEnd = 4.dp, bottomEnd = 4.dp)
+        otpCount - 1 -> RoundedCornerShape(topStart = 4.dp, bottomStart = 4.dp, topEnd = 10.dp, bottomEnd = 10.dp)
+        else -> RoundedCornerShape(4.dp)
+    }
+
+    Box(
         modifier = Modifier
-            .size(50.dp)
+            .size(44.dp)
             .border(
                 2.dp, when {
                     isFocused -> MaterialTheme.colorScheme.primary
-                    else -> MaterialTheme.colorScheme.secondary
-                }, RoundedCornerShape(8.dp)
+                    else -> MaterialTheme.colorScheme.outline
+                }, shape
             )
-            .padding(8.dp),
-        text = char,
-        style = if (isFocused) {
-            MaterialTheme.typography.headlineMedium
-        } else {
-            MaterialTheme.typography.headlineSmall
-        },
-        fontSize = MaterialTheme.typography.headlineSmall.fontSize,
-        textAlign = TextAlign.Center
-    )
+            .padding(0.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = char,
+            style = MaterialTheme.typography.titleSmall,
+            textAlign = TextAlign.Center,
+            color = MaterialTheme.colorScheme.onSurface
+        )
+    }
 }

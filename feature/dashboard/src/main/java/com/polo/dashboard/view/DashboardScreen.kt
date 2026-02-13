@@ -1,30 +1,22 @@
 package com.polo.dashboard.view
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material.icons.filled.Inventory2
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -34,25 +26,22 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import com.polo.designsystem.R.drawable
-import com.polo.ui.ExpandableContent
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.ui.res.stringResource
 import com.polo.dashboard.R
 import com.polo.dashboard.viewmodel.DashboardViewModel
 import com.polo.dashboard.viewmodel.DashboardViewModel.UiState
 import com.polo.dashboard.viewmodel.PalletListUiModel.PalletListUiBody
 import com.polo.dashboard.viewmodel.PalletListUiModel.PalletListUiHeader
+import com.polo.ui.ExpandableCard
+import com.polo.ui.YnTopAppBar
 
 @Composable
 fun DashboardRoute(
-    onCreatePallet: () -> Unit,
-    onEditPallet: () -> Unit,
     viewModel: DashboardViewModel = hiltViewModel()
 ) {
     LaunchedEffect(Unit) {
@@ -63,60 +52,30 @@ fun DashboardRoute(
 
     Surface {
         DashboardScreen(
-            state = state,
-            onCreatePallet = onCreatePallet,
-            onEditPallet = onEditPallet
+            state = state
         )
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 @Preview
 fun DashboardScreen(
-    state: UiState = UiState(),
-    onCreatePallet: () -> Unit = {},
-    onEditPallet: () -> Unit = {}
+    state: UiState = UiState()
 ) {
     Scaffold(
-        bottomBar = {
-            DashboardBottomNavigation(
-                onCreatePallet = onCreatePallet,
-                onEditPallet = onEditPallet
+        topBar = {
+            YnTopAppBar(
+                title = stringResource(id = R.string.dashboard_screen_title)
             )
         }
     ) { paddingValues ->
-        Box(
-            modifier = Modifier.padding(paddingValues)
-        ) {
-            DashboardContent(state = state)
-        }
-    }
-}
-
-@Composable
-@Preview
-fun DashboardBottomNavigation(
-    onCreatePallet: () -> Unit = {},
-    onEditPallet: () -> Unit = {}
-) {
-    NavigationBar {
-        NavigationBarItem(
-            selected = false,
-            onClick = onCreatePallet,
-            icon = { Icon(imageVector = Icons.Filled.Add, contentDescription = null) },
-            label = { Text(text = stringResource(id = R.string.nav_create)) }
-        )
-        NavigationBarItem(
-            selected = false,
-            onClick = onEditPallet,
-            icon = {
-                Icon(
-                    imageVector = ImageVector.vectorResource(id = drawable.ic_qr_code_scanner),
-                    contentDescription = null
-                )
-            },
-            label = { Text(text = stringResource(id = R.string.nav_scan)) }
+        DashboardContent(
+            modifier = Modifier
+                .padding(paddingValues)
+                .consumeWindowInsets(paddingValues)
+                .fillMaxSize(),
+            name = state.name,
+            state = state
         )
     }
 }
@@ -125,33 +84,79 @@ fun DashboardBottomNavigation(
 @Preview
 fun DashboardContent(
     modifier: Modifier = Modifier,
+    name: String = "",
     state: UiState = UiState()
 ) {
     Column(
         modifier = modifier
-            .fillMaxSize()
-            .padding(start = 24.dp, top = 24.dp, end = 24.dp),
+            .background(MaterialTheme.colorScheme.surfaceVariant)
+            .padding(horizontal = 16.dp, vertical = 16.dp),
         verticalArrangement = Arrangement.Top
     ) {
-        DashboardTitleUi(state.name)
-        DashboardPalletListUi(state)
+        Text(
+            text = stringResource(id = R.string.dashboard_screen_subtitle, name),
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+        Spacer(modifier = Modifier.height(10.dp))
+
+        Text(
+            text = stringResource(id = R.string.dashboard_screen_pallet_section),
+            style = MaterialTheme.typography.titleMedium,
+            color = MaterialTheme.colorScheme.onSurface
+        )
+        Text(
+            modifier = Modifier.padding(top = 2.dp),
+            text = stringResource(id = R.string.dashboard_screen_pallet_section_subtitle),
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        if (state.palletsUiModels.isEmpty()) {
+            DashboardEmptyState()
+        } else {
+            DashboardPalletListUi(state)
+        }
     }
 }
 
 @Composable
-@Preview
-fun DashboardTitleUi(
-    name: String = "Jovan Jocovic"
-) {
+private fun DashboardEmptyState() {
     Column(
         modifier = Modifier
-            .padding(bottom = 24.dp)
+            .fillMaxWidth()
+            .padding(vertical = 64.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        Box(
+            modifier = Modifier
+                .size(64.dp)
+                .background(
+                    color = MaterialTheme.colorScheme.surface,
+                    shape = RoundedCornerShape(32.dp)
+                ),
+            contentAlignment = Alignment.Center
+        ) {
+            Icon(
+                imageVector = Icons.Default.Inventory2,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        }
         Text(
-            text = stringResource(id = R.string.dashboard_screen_title),
-            style = MaterialTheme.typography.headlineLarge
+            modifier = Modifier.padding(top = 12.dp),
+            text = stringResource(id = R.string.dashboard_screen_empty_title),
+            style = MaterialTheme.typography.titleMedium,
+            color = MaterialTheme.colorScheme.onSurface
         )
-        Text(text = stringResource(id = R.string.dashboard_screen_subtitle, name))
+        Text(
+            modifier = Modifier.padding(top = 4.dp),
+            text = stringResource(id = R.string.dashboard_screen_empty_subtitle),
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
     }
 }
 
@@ -160,77 +165,44 @@ fun DashboardTitleUi(
 fun DashboardPalletListUi(
     state: UiState = UiState()
 ) {
-    Text(
-        text = stringResource(id = R.string.dashboard_screen_pallet_section),
-        style = MaterialTheme.typography.headlineSmall
-    )
-
     LazyColumn {
         items(
             state.palletsUiModels.keys.toList(),
             key = { it.warehouse },
             contentType = { PalletListUiHeader::class }
         ) { item ->
-            Column {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 16.dp)
-                        .clickable { item.expanded.value = !item.expanded.value }
-                ) {
+            val groups = state.palletsUiModels[item].orEmpty()
+            ExpandableCard(
+                expanded = item.expanded.value,
+                onExtended = { isExpanded -> item.expanded.value = !isExpanded },
+                titleContent = {
                     Column {
-                        Spacer(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(1.dp)
-                                .background(MaterialTheme.colorScheme.onBackground)
-                                .padding(vertical = 16.dp)
+                        Text(
+                            text = item.warehouse,
+                            style = MaterialTheme.typography.titleSmall,
+                            color = MaterialTheme.colorScheme.onSurface
                         )
-
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-
-                            Icon(
-                                modifier = Modifier
-                                    .padding(vertical = 16.dp, horizontal = 4.dp),
-                                imageVector = ImageVector.vectorResource(id = R.drawable.ic_warehouse),
-                                contentDescription = null
-                            )
-
-                            Text(
-                                modifier = Modifier
-                                    .padding(vertical = 16.dp, horizontal = 4.dp),
-                                text = item.warehouse
-                            )
-                        }
-
-
-                        Spacer(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(1.dp)
-                                .background(MaterialTheme.colorScheme.onBackground)
-                                .padding(vertical = 16.dp)
+                        Text(
+                            modifier = Modifier.padding(top = 2.dp),
+                            text = stringResource(
+                                id = R.string.dashboard_screen_products_count,
+                                groups.size
+                            ),
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     }
-                }
-
-                ExpandableContent(
-                    visible = item.expanded.value,
-                ) {
-                    Column {
-                        state.palletsUiModels[item]?.forEach {
-                            DashboardPalletItemUi(it)
-                        }
+                },
+                bodyContent = {
+                    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                        groups.forEach { DashboardPalletItemUi(it) }
                     }
                 }
-            }
+            )
         }
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 @Preview
 fun DashboardPalletItemUi(
@@ -240,92 +212,34 @@ fun DashboardPalletItemUi(
         count = 3
     )
 ) {
-    Card(
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceContainer,
-            contentColor = MaterialTheme.colorScheme.onSurface,
-        ),
+    Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 8.dp)
+            .background(
+                color = MaterialTheme.colorScheme.surfaceVariant,
+                shape = RoundedCornerShape(12.dp)
+            )
+            .padding(12.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
     ) {
-
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-                .focusable(false)
-                .clickable(false, onClick = {}),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceEvenly
-        ) {
-            Box(
-                modifier = Modifier
-                    .weight(1f)
-            ) {
-                OutlinedTextField(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .focusable(false)
-                        .clickable(false, onClick = {}),
-                    shape = OutlinedTextFieldDefaults.shape,
-                    readOnly = true,
-                    value = body.name,
-                    singleLine = true,
-                    onValueChange = { },
-                    label = {
-                        Text(
-                            text = stringResource(id = R.string.dashboard_screen_pallet_name),
-                            overflow = TextOverflow.Visible
-                        )
-                    }
-                )
-            }
-            Spacer(modifier = Modifier.padding(8.dp))
-            Box(
-                modifier = Modifier
-                    .weight(0.6f)
-            ) {
-                OutlinedTextField(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .focusable(false)
-                        .clickable(false, onClick = {}),
-                    shape = OutlinedTextFieldDefaults.shape,
-                    readOnly = true,
-                    value = body.amount.toString(),
-                    onValueChange = { },
-                    label = {
-                        Text(
-                            text = stringResource(id = R.string.dashboard_screen_pallet_amount),
-                            overflow = TextOverflow.Visible
-                        )
-                    }
-                )
-            }
-
-            Spacer(modifier = Modifier.padding(8.dp))
-            Box(
-                modifier = Modifier.weight(0.5f)
-            ) {
-                OutlinedTextField(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .focusable(false)
-                        .clickable(false, onClick = {}),
-                    shape = OutlinedTextFieldDefaults.shape,
-                    readOnly = true,
-                    value = "x${body.count}",
-                    onValueChange = { },
-                    label = {
-                        Text(
-                            text = stringResource(id = R.string.dashboard_screen_pallet_count),
-                            overflow = TextOverflow.Visible
-                        )
-                    }
-                )
-            }
-
+        Column(modifier = Modifier.weight(1f)) {
+            Text(
+                text = body.name,
+                style = MaterialTheme.typography.titleSmall,
+                color = MaterialTheme.colorScheme.onSurface
+            )
+            Text(
+                modifier = Modifier.padding(top = 2.dp),
+                text = stringResource(id = R.string.dashboard_screen_pallet_amount_line, body.amount),
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
         }
+        Text(
+            text = stringResource(id = R.string.dashboard_screen_pallet_count_line, body.count),
+            style = MaterialTheme.typography.labelLarge,
+            color = MaterialTheme.colorScheme.onSurface
+        )
     }
 }

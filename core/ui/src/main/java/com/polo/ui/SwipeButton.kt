@@ -3,6 +3,7 @@
 package com.polo.ui
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.AnchoredDraggableDefaults
 import androidx.compose.foundation.gestures.AnchoredDraggableState
 import androidx.compose.foundation.gestures.DraggableAnchors
@@ -17,7 +18,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons.AutoMirrored.Filled
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
@@ -53,10 +53,10 @@ private const val SnapThreshold = 0.8f
 
 @Composable
 fun SlideToUnlock(
-    isLoading: Boolean = false,
     text: String,
-    onUnlockRequested: () -> Unit,
     modifier: Modifier = Modifier,
+    isLoading: Boolean = false,
+    onUnlockRequested: () -> Unit,
 ) {
     val hapticFeedback = LocalHapticFeedback.current
     val onUnlockRequestedState by rememberUpdatedState(onUnlockRequested)
@@ -150,8 +150,8 @@ fun Track(
         derivedStateOf {
             calculateTrackColor(
                 swipeFraction = swipeFraction,
-                startColor = colorScheme.primary,
-                endColor = colorScheme.secondary,
+                startColor = colorScheme.primaryContainer,
+                endColor = colorScheme.secondaryContainer,
             )
         }
     }
@@ -180,7 +180,12 @@ fun Track(
             )
             .background(
                 color = backgroundColor,
-                shape = RoundedCornerShape(percent = 50),
+                shape = RoundedCornerShape(16.dp),
+            )
+            .border(
+                width = 1.dp,
+                color = colorScheme.outline,
+                shape = RoundedCornerShape(16.dp)
             )
             .padding(
                 PaddingValues(
@@ -211,20 +216,20 @@ fun Thumb(
     Box(
         modifier = modifier
             .size(Thumb.Size)
-            .background(color = colorScheme.surface, shape = CircleShape)
+            .background(color = colorScheme.primary, shape = RoundedCornerShape(12.dp))
             .padding(8.dp),
     ) {
         if (isLoading) {
             CircularProgressIndicator(
                 modifier = Modifier.padding(2.dp),
-                color = colorScheme.onSurface,
+                color = colorScheme.onPrimary,
                 strokeWidth = 2.dp
             )
         } else {
             Icon(
                 imageVector = Filled.ArrowForward,
                 contentDescription = null,
-                tint = colorScheme.onSurface,
+                tint = colorScheme.onPrimary,
             )
         }
     }
@@ -244,7 +249,7 @@ fun Hint(
     Text(
         text = text,
         color = hintTextColor,
-        style = MaterialTheme.typography.titleSmall,
+        style = MaterialTheme.typography.labelLarge,
         modifier = modifier
     )
 }
@@ -260,7 +265,7 @@ fun calculateHintTextColor(
 
 
 private object Thumb {
-    val Size = 40.dp
+    val Size = 48.dp
 }
 
 private object Track

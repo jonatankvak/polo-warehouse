@@ -36,7 +36,14 @@ class VerificationViewModel @Inject constructor(
         this.phoneNumber = phoneNumber
         viewModelScope.launch {
 
-            _state.update { _state.value.copy(isLoading = true, isError = false, errorMessage = "") }
+            _state.update {
+                _state.value.copy(
+                    isLoading = true,
+                    isError = false,
+                    errorMessage = "",
+                    phoneNumber = phoneNumber
+                )
+            }
 
             verificationService
                 .verifyPhoneNumber(
@@ -74,6 +81,30 @@ class VerificationViewModel @Inject constructor(
                     phoneNumber = phoneNumber
                 )
                 .collectLatest(::handleVerificationState)
+        }
+    }
+
+    fun backToPhoneEntry() {
+        _state.update {
+            _state.value.copy(
+                isCodeSent = false,
+                isUserSignedIn = false,
+                isError = false,
+                errorMessage = "",
+                isLoading = false
+            )
+        }
+    }
+
+    fun backToCodeEntry() {
+        _state.update {
+            _state.value.copy(
+                isUserSignedIn = false,
+                isCodeSent = true,
+                isError = false,
+                errorMessage = "",
+                isLoading = false
+            )
         }
     }
 
@@ -142,6 +173,7 @@ class VerificationViewModel @Inject constructor(
         val isError: Boolean = false,
         val isUserSignedIn : Boolean = false,
         val isNameProvided: Boolean = false,
+        val phoneNumber: String = "",
         val errorMessage: String = ""
     )
 }
