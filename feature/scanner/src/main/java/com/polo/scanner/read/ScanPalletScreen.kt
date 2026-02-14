@@ -69,8 +69,12 @@ fun ScanPalletRoute(
                 onQrCodeScanned = { scannedText ->
                     val normalizedCode = scannedText.trim()
                     val now = SystemClock.elapsedRealtime()
-                    val isDuplicateQuickRescan =
-                        normalizedCode == lastScannedCode && now - lastScannedAtMs < 3000L
+                    val isDuplicateQuickRescan = isDuplicateQuickRescan(
+                        normalizedCode = normalizedCode,
+                        lastScannedCode = lastScannedCode,
+                        lastScannedAtMs = lastScannedAtMs,
+                        nowMs = now
+                    )
 
                     if (isDuplicateQuickRescan) return@QrScannerUi
 
@@ -87,6 +91,16 @@ fun ScanPalletRoute(
             )
         }
     }
+}
+
+internal fun isDuplicateQuickRescan(
+    normalizedCode: String,
+    lastScannedCode: String,
+    lastScannedAtMs: Long,
+    nowMs: Long,
+    thresholdMs: Long = 3000L
+): Boolean {
+    return normalizedCode == lastScannedCode && nowMs - lastScannedAtMs < thresholdMs
 }
 
 @Composable
