@@ -9,16 +9,15 @@ import com.polo.verification.PhoneVerificationState
 import com.polo.verification.PhoneVerificationState.CodeSent
 import com.polo.verification.PhoneVerificationState.VerificationCompleted
 import com.polo.verification.PhoneVerificationState.VerificationFailed
-import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import org.koin.core.annotation.KoinViewModel
 
-@HiltViewModel
-class VerificationViewModel @Inject constructor(
+@KoinViewModel
+class VerificationViewModel(
     private val authenticationRepository: AuthenticationRepository,
     private val verificationService: PhoneVerificationService
 ): ViewModel() {

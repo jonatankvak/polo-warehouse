@@ -1,8 +1,7 @@
 plugins {
     id("polo.android.library")
-    alias(libs.plugins.hilt)
     alias(libs.plugins.ktlint)
-    alias(libs.plugins.ksp)
+    alias(libs.plugins.koin.compiler)
 }
 
 android {
@@ -19,6 +18,6 @@ dependencies {
     implementation(libs.firebase.common)
     implementation(libs.firebase.firestore)
 
-    implementation(libs.hilt.android)
-    ksp(libs.hilt.android.compiler)
+    implementation(libs.koin.core)
+    implementation(libs.koin.annotations)
 }

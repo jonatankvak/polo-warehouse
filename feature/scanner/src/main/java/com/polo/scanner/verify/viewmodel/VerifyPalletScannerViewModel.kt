@@ -5,19 +5,18 @@ import androidx.lifecycle.viewModelScope
 import com.polo.ui.model.UiPallet
 import com.polo.domain.model.PalletStatus.READY
 import com.polo.domain.repository.PalletRepository
-import dagger.hilt.android.lifecycle.HiltViewModel
 import de.palm.composestateevents.StateEvent
 import de.palm.composestateevents.StateEventWithContent
 import de.palm.composestateevents.consumed
 import de.palm.composestateevents.triggered
-import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import org.koin.core.annotation.KoinViewModel
 
-@HiltViewModel
-class VerifyPalletScannerViewModel @Inject constructor(
+@KoinViewModel
+class VerifyPalletScannerViewModel(
     private val palletRepository: PalletRepository
 ): ViewModel() {
 

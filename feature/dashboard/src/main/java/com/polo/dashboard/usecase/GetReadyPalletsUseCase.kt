@@ -7,13 +7,14 @@ import com.polo.domain.model.PalletStatus.READY
 import com.polo.domain.model.Product
 import com.polo.domain.model.Warehouse
 import com.polo.domain.repository.PalletRepository
-import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
+import org.koin.core.annotation.Factory
 
-class GetReadyPalletsUseCase @Inject constructor(
+@Factory
+class GetReadyPalletsUseCase(
     private val palletRepository: PalletRepository
 ) {
 

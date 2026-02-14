@@ -4,9 +4,10 @@ import com.polo.data.datasource.FirestoreDataSource
 import com.polo.data.model.WarehouseDocument
 import com.polo.domain.model.Warehouse
 import com.polo.domain.repository.WarehouseRepository
-import javax.inject.Inject
+import org.koin.core.annotation.Single
 
-class WarehouseRepositoryImpl @Inject constructor(
+@Single(binds = [WarehouseRepository::class])
+class WarehouseRepositoryImpl(
     private val firestoreDataSource: FirestoreDataSource
 ) : WarehouseRepository {
 

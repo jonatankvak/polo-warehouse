@@ -5,44 +5,23 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.firestore
-import com.polo.data.datasource.FirestoreDataSource
-import com.polo.domain.repository.AuthenticationRepository
-import com.polo.firebase.datasource.AuthenticationRepositoryImpl
-import com.polo.firebase.datasource.FirestoreDataSourceImpl
-import com.polo.firebase.datasource.PhoneVerificationServiceImpl
-import com.polo.verification.PhoneVerificationService
-import dagger.Binds
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
-import javax.inject.Singleton
+import org.koin.core.annotation.ComponentScan
+import org.koin.core.annotation.Configuration
+import org.koin.core.annotation.Module
+import org.koin.core.annotation.Single
 
 @Module
-@InstallIn(SingletonComponent::class)
-abstract class FirebaseModule {
+@Configuration
+@ComponentScan("com.polo.firebase")
+class FirebaseModule {
 
-    @Binds
-    abstract fun bindAuthenticationRepository(repository: AuthenticationRepositoryImpl): AuthenticationRepository
+    @Single
+    fun provideFirebaseAuth(): FirebaseAuth {
+        return Firebase.auth
+    }
 
-    @Binds
-    abstract fun bindPhoneVerificationService(service: PhoneVerificationServiceImpl): PhoneVerificationService
-
-    @Binds
-    abstract fun bindFirestoreDataSource(firestoreDataSource: FirestoreDataSourceImpl): FirestoreDataSource
-
-    companion object {
-
-        @Provides
-        @Singleton
-        fun provideFirebaseAuth(): FirebaseAuth {
-            return Firebase.auth
-        }
-
-        @Provides
-        @Singleton
-        fun provideFirebaseFirestore(): FirebaseFirestore {
-            return Firebase.firestore
-        }
+    @Single
+    fun provideFirebaseFirestore(): FirebaseFirestore {
+        return Firebase.firestore
     }
 }

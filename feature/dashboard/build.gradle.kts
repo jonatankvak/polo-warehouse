@@ -1,10 +1,9 @@
 plugins {
     id("polo.android.library.compose")
     alias(libs.plugins.kotlin.parcelize)
-    alias(libs.plugins.hilt)
     alias(libs.plugins.ktlint)
+    alias(libs.plugins.koin.compiler)
     alias(libs.plugins.kotlin.serialization)
-    alias(libs.plugins.ksp)
 }
 
 android {
@@ -17,16 +16,15 @@ dependencies {
     implementation(libs.kotlinx.coroutines.play.services)
     implementation(libs.lifecycle.runtime.ktx)
     implementation(libs.activity.compose)
-    implementation(libs.hilt.compose)
+    implementation(libs.koin.android)
+    implementation(libs.koin.androidx.compose)
+    implementation(libs.koin.annotations)
 
     implementation(platform(libs.compose.bom))
     androidTestImplementation(platform(libs.compose.bom))
 
     implementation(libs.compose.material3)
     implementation(libs.compose.material.icons.extended)
-
-    implementation(libs.hilt.android)
-    ksp(libs.hilt.android.compiler)
 
     implementation(libs.kotlinx.serialization.core)
 

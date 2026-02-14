@@ -35,17 +35,17 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.polo.authentication.R
 import com.polo.authentication.viewmodel.VerificationViewModel
 import com.polo.authentication.viewmodel.VerificationViewModel.UiState
 import com.polo.ui.OtpTextField
 import com.polo.ui.YnTopAppBar
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun VerificationRoute(
     onSignedIn: () -> Unit,
-    viewModel: VerificationViewModel = hiltViewModel()
+    viewModel: VerificationViewModel = koinViewModel()
 ) {
     val state by viewModel.state.collectAsState()
     val activity = LocalContext.current as? Activity

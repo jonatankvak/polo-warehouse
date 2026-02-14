@@ -9,7 +9,7 @@ java {
 
 dependencies {
     compileOnly("com.android.tools.build:gradle:9.0.0")
-    compileOnly("org.jetbrains.kotlin:kotlin-gradle-plugin:2.2.21")
+    compileOnly("org.jetbrains.kotlin:kotlin-gradle-plugin:2.3.20-Beta2")
 }
 
 gradlePlugin {

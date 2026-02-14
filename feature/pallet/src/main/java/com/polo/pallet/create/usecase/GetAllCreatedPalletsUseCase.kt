@@ -9,13 +9,14 @@ import com.polo.domain.repository.PalletRepository
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle.SHORT
-import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
+import org.koin.core.annotation.Factory
 
-class GetAllCreatedPalletsUseCase @Inject constructor(
+@Factory
+class GetAllCreatedPalletsUseCase(
     private val palletRepository: PalletRepository
 ) {
 

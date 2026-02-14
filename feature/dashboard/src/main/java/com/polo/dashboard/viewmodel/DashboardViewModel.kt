@@ -10,19 +10,18 @@ import com.polo.domain.model.Warehouse
 import com.polo.domain.repository.AuthenticationRepository
 import com.polo.domain.repository.ProductRepository
 import com.polo.domain.repository.WarehouseRepository
-import dagger.hilt.android.lifecycle.HiltViewModel
 import de.palm.composestateevents.StateEventWithContent
 import de.palm.composestateevents.consumed
 import de.palm.composestateevents.triggered
-import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import org.koin.core.annotation.KoinViewModel
 
-@HiltViewModel
-class DashboardViewModel @Inject constructor(
+@KoinViewModel
+class DashboardViewModel(
     private val authenticationRepository: AuthenticationRepository,
     private val productRepository: ProductRepository,
     private val warehouseRepository: WarehouseRepository,

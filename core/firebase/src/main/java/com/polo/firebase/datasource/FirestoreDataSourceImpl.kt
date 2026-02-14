@@ -11,7 +11,6 @@ import com.polo.data.model.ProductDocument
 import com.polo.data.model.WarehouseDocument
 import com.polo.data.datasource.FirestoreDataSource
 import com.polo.domain.functional.runSuspendCatching
-import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.channels.awaitClose
@@ -20,8 +19,10 @@ import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.asDeferred
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
+import org.koin.core.annotation.Single
 
-class FirestoreDataSourceImpl @Inject constructor(
+@Single(binds = [FirestoreDataSource::class])
+class FirestoreDataSourceImpl(
     private val firestore: FirebaseFirestore
 ) : FirestoreDataSource {
 
