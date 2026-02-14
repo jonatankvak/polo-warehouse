@@ -67,6 +67,11 @@ fun PoloWarehouseNavHost(
         )
     }
 
+    val onSignedInGoToDashboard: () -> Unit = {
+        backStack.clear()
+        backStack.add(DashboardDestination)
+    }
+
     val goToCreate: () -> Unit = {
         navigateToTopLevel(
             backStack = backStack,
@@ -171,7 +176,7 @@ fun PoloWarehouseNavHost(
                 },
                 entryProvider = entryProvider {
                     entry<AuthenticationDestination> {
-                        VerificationRoute(onSignedIn = goToDashboard)
+                        VerificationRoute(onSignedIn = onSignedInGoToDashboard)
                     }
                     entry<DashboardDestination> {
                         DashboardRoute()

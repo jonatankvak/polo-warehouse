@@ -10,6 +10,7 @@
 /.idea/assetWizardSettings.xml
 /google-services.json
 AGENT.md
+AGENTS.md
 /docs/todo/
 .DS_Store
 **/build/
