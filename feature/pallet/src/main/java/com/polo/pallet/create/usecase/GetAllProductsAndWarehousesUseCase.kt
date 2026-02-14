@@ -6,11 +6,12 @@ import com.polo.domain.model.Product
 import com.polo.domain.model.Warehouse
 import com.polo.domain.repository.ProductRepository
 import com.polo.domain.repository.WarehouseRepository
-import javax.inject.Inject
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
+import org.koin.core.annotation.Factory
 
-class GetAllProductsAndWarehousesUseCase @Inject constructor(
+@Factory
+class GetAllProductsAndWarehousesUseCase(
     private val productRepository: ProductRepository,
     private val warehouseRepository: WarehouseRepository
 ) {

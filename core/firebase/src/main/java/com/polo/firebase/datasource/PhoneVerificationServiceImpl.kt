@@ -16,14 +16,13 @@ import com.polo.verification.PhoneVerificationState.CodeSent
 import com.polo.verification.PhoneVerificationState.VerificationCompleted
 import com.polo.verification.PhoneVerificationState.VerificationFailed
 import java.util.concurrent.TimeUnit.SECONDS
-import javax.inject.Inject
-import javax.inject.Singleton
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
+import org.koin.core.annotation.Single
 
-@Singleton
-class PhoneVerificationServiceImpl @Inject constructor(
+@Single(binds = [PhoneVerificationService::class])
+class PhoneVerificationServiceImpl(
     private val firebaseAuth: FirebaseAuth,
 ) : PhoneVerificationService {
 

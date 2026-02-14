@@ -5,11 +5,10 @@ import androidx.navigation3.runtime.NavKey
 import com.polo.authentication.api.navigation.AuthenticationDestination
 import com.polo.dashboard.api.navigation.DashboardDestination
 import com.polo.domain.repository.AuthenticationRepository
-import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
+import org.koin.core.annotation.KoinViewModel
 
-@HiltViewModel
-class MainActivityViewModel @Inject constructor(
+@KoinViewModel
+class MainActivityViewModel(
     private val authenticationRepository: AuthenticationRepository
 ) : ViewModel() {
 

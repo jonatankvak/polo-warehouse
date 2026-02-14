@@ -1,10 +1,9 @@
 plugins {
     id("polo.android.library")
     alias(libs.plugins.kotlin.parcelize)
-    alias(libs.plugins.hilt)
     alias(libs.plugins.ktlint)
+    alias(libs.plugins.koin.compiler)
     alias(libs.plugins.kotlin.serialization)
-    alias(libs.plugins.ksp)
 }
 
 android {
@@ -12,8 +11,8 @@ android {
 }
 
 dependencies {
-    implementation(libs.hilt.android)
-    ksp(libs.hilt.android.compiler)
+    implementation(libs.koin.core)
+    implementation(libs.koin.annotations)
 
     implementation(libs.kotlinx.serialization.core)
     implementation(libs.kotlinx.coroutines.core)

@@ -11,21 +11,20 @@ import com.polo.domain.repository.AuthenticationRepository
 import com.polo.domain.repository.PalletRepository
 import com.polo.pallet.create.usecase.GetAllCreatedPalletsUseCase
 import com.polo.pallet.create.usecase.GetAllProductsAndWarehousesUseCase
-import dagger.hilt.android.lifecycle.HiltViewModel
 import de.palm.composestateevents.StateEvent
 import de.palm.composestateevents.StateEventWithContent
 import de.palm.composestateevents.consumed
 import de.palm.composestateevents.triggered
-import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import org.koin.core.annotation.KoinViewModel
 
-@HiltViewModel
-class CreatePalletViewModel @Inject constructor(
+@KoinViewModel
+class CreatePalletViewModel(
     private val palletRepository: PalletRepository,
     private val getAllProductsAndWarehousesUseCase: GetAllProductsAndWarehousesUseCase,
     private val getAllCreatedPalletsUseCase: GetAllCreatedPalletsUseCase,

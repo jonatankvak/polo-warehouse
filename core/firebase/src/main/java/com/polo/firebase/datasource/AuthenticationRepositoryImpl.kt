@@ -4,10 +4,11 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.UserProfileChangeRequest
 import com.polo.domain.functional.runSuspendCatching
 import com.polo.domain.repository.AuthenticationRepository
-import javax.inject.Inject
 import kotlinx.coroutines.tasks.await
+import org.koin.core.annotation.Single
 
-class AuthenticationRepositoryImpl @Inject constructor(
+@Single(binds = [AuthenticationRepository::class])
+class AuthenticationRepositoryImpl(
     private val firebaseAuth: FirebaseAuth
 ) : AuthenticationRepository {
 

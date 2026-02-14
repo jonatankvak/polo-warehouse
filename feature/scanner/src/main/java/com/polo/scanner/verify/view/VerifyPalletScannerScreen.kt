@@ -27,7 +27,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.polo.scanner.R
 import com.polo.scanner.R.string
 import com.polo.scanner.scanner.QrScannerUi
@@ -39,13 +38,14 @@ import com.polo.ui.model.ScanningPallet
 import com.polo.ui.model.UiPallet
 import de.palm.composestateevents.EventEffect
 import kotlinx.coroutines.delay
+import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun VerifyPalletScannerRoute(
     pallet: ScanningPallet,
     onBack: () -> Unit,
-    viewModel: VerifyPalletScannerViewModel = hiltViewModel()
+    viewModel: VerifyPalletScannerViewModel = koinViewModel()
 ) {
     val uiPallet = remember(pallet) { pallet.toUiPallet() }
 

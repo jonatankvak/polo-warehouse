@@ -7,11 +7,12 @@ import com.polo.domain.model.CreatePallet as DomainCreatePallet
 import com.polo.domain.model.Pallet
 import com.polo.domain.model.PalletStatus
 import com.polo.domain.repository.PalletRepository
-import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import org.koin.core.annotation.Single
 
-class PalletRepositoryImpl @Inject constructor(
+@Single(binds = [PalletRepository::class])
+class PalletRepositoryImpl(
     private val firestoreDataSource: FirestoreDataSource
 ) : PalletRepository {
 
