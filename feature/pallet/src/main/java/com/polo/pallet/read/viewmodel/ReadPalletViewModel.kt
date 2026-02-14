@@ -78,7 +78,13 @@ class ReadPalletViewModel @Inject constructor(
                 return@launch
             }
 
-            if (_state.value.isFinalDestination) {
+            val transition = resolveStatusTransition(
+                currentStatus = currentPallet.status,
+                currentWarehouseUid = currentPallet.warehouseUid,
+                isFinalDestination = _state.value.isFinalDestination
+            )
+
+            if (transition.shouldDissolve) {
                 palletRepository.deletePallet(currentPallet.uid)
                     .onSuccess {
                         _state.update { current -> current.copy(isLoading = false, isDissolved = true) }
@@ -88,13 +94,11 @@ class ReadPalletViewModel @Inject constructor(
                 return@launch
             }
 
-            val (toStatus, toWarehouse) = when(currentPallet.status) {
-                READY -> Pair(TRANSPORT, currentPallet.warehouseUid)
-                TRANSPORT -> Pair(READY, WarehouseIds.ZABLACE)
-                CREATED -> Pair(READY, currentPallet.warehouseUid)
-            }
-
-            palletRepository.updateStatus(currentPallet.uid, toStatus, toWarehouse)
+            palletRepository.updateStatus(
+                palletUid = currentPallet.uid,
+                status = transition.status,
+                warehouseUid = transition.warehouseUid
+            )
                 .onSuccess {
                     _state.update { current -> current.copy(isLoading = false) }
                 }.onFailure {
@@ -121,5 +125,45 @@ class ReadPalletViewModel @Inject constructor(
 
         val isFinalDestination: Boolean
             get() = (pallet?.warehouseUid == WarehouseIds.ZABLACE) and (pallet?.status == READY)
+    }
+}
+
+internal data class StatusTransition(
+    val status: com.polo.domain.model.PalletStatus,
+    val warehouseUid: String,
+    val shouldDissolve: Boolean
+)
+
+internal fun resolveStatusTransition(
+    currentStatus: com.polo.domain.model.PalletStatus,
+    currentWarehouseUid: String,
+    isFinalDestination: Boolean
+): StatusTransition {
+    if (isFinalDestination) {
+        return StatusTransition(
+            status = currentStatus,
+            warehouseUid = currentWarehouseUid,
+            shouldDissolve = true
+        )
+    }
+
+    return when (currentStatus) {
+        READY -> StatusTransition(
+            status = TRANSPORT,
+            warehouseUid = currentWarehouseUid,
+            shouldDissolve = false
+        )
+
+        TRANSPORT -> StatusTransition(
+            status = READY,
+            warehouseUid = WarehouseIds.ZABLACE,
+            shouldDissolve = false
+        )
+
+        CREATED -> StatusTransition(
+            status = READY,
+            warehouseUid = currentWarehouseUid,
+            shouldDissolve = false
+        )
     }
 }

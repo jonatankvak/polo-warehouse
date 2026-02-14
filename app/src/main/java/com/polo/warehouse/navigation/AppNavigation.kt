@@ -68,8 +68,7 @@ fun PoloWarehouseNavHost(
     }
 
     val onSignedInGoToDashboard: () -> Unit = {
-        backStack.clear()
-        backStack.add(DashboardDestination)
+        navigateAfterSignIn(backStack)
     }
 
     val goToCreate: () -> Unit = {
@@ -86,12 +85,7 @@ fun PoloWarehouseNavHost(
         )
     }
 
-    val selectedTab = when (backStack.lastOrNull()) {
-        DashboardDestination -> MainTab.Dashboard
-        EditPalletScannerDestination -> MainTab.Scan
-        CreatePalletDestination -> MainTab.Create
-        else -> null
-    }
+    val selectedTab = selectedMainTab(backStack.lastOrNull())
 
     Scaffold(
         bottomBar = {
@@ -213,36 +207,4 @@ fun PoloWarehouseNavHost(
             )
         }
     }
-}
-
-private enum class MainTab {
-    Dashboard,
-    Scan,
-    Create
-}
-
-private fun navigateToTopLevel(
-    backStack: MutableList<NavKey>,
-    destination: NavKey
-) {
-    val topLevelDestinations: Set<NavKey> = setOf(
-        DashboardDestination,
-        EditPalletScannerDestination,
-        CreatePalletDestination
-    )
-
-    val existingIndex = backStack.indexOfLast { it == destination }
-    if (existingIndex >= 0) {
-        while (backStack.lastIndex > existingIndex) {
-            backStack.removeAt(backStack.lastIndex)
-        }
-        return
-    }
-
-    val last = backStack.lastOrNull()
-    if (backStack.size > 1 && last in topLevelDestinations) {
-        backStack.removeAt(backStack.lastIndex)
-    }
-
-    backStack.add(destination)
 }

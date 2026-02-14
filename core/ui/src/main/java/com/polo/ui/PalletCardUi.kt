@@ -102,7 +102,7 @@ fun PalletCardUi(
                 )
             }
 
-            if (onScanControl != null || onDeleteControl != null) {
+            if (shouldShowPalletActions(onScanControl, onDeleteControl)) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -159,6 +159,13 @@ fun PalletCardUi(
             }
         }
     }
+}
+
+internal fun shouldShowPalletActions(
+    onScanControl: (() -> Unit)?,
+    onDeleteControl: (() -> Unit)?
+): Boolean {
+    return onScanControl != null || onDeleteControl != null
 }
 
 @Composable
